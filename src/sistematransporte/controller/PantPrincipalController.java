@@ -7,16 +7,23 @@ package sistematransporte.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import sistematransporte.controller.Controller;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
  *
  * @author Kevin F
  */
-public class PantInicioController extends Controller implements Initializable {
+public class PantPrincipalController extends Controller implements Initializable {
 
+    @FXML
+    private AnchorPane apCentro;
+    @FXML
+    private ImageView ivMapa;
     /**
      * Initializes the controller class.
      */
@@ -27,6 +34,6 @@ public class PantInicioController extends Controller implements Initializable {
 
     @Override
     public void initialize() {
-       }
+      }
     
 }

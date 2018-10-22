@@ -87,7 +87,7 @@ public class FlowController {
     public void goMain() {
         try {
             this.mainStage.setResizable(false);
-            this.mainStage.getIcons().add(new Image("scrabble/resources/icono.png"));
+            this.mainStage.getIcons().add(new Image("sistematransporte/resources/icono.png"));
             this.mainStage.setScene(new Scene(FXMLLoader.load(SistemaTransporte.class.getResource("view/PantPrincipal.fxml"), this.idioma)));
             this.mainStage.show();
         } catch (IOException ex) {
@@ -166,7 +166,7 @@ public class FlowController {
         Stage stage = new Stage();
         stage.getIcons().add(new Image("sistematransporte/resources/icono.png"));
         stage.setTitle("Sistema Transporte");
-        stage.setResizable(resizable);
+        stage.setResizable(false);
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());
             controller.setStage(null);
@@ -179,7 +179,6 @@ public class FlowController {
         stage.initOwner(parentStage);
         stage.centerOnScreen();
         stage.showAndWait();
-
     }
 
     public Controller getController(String viewName) {

@@ -18,7 +18,7 @@ public class SistemaTransporte extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FlowController.getInstance().InitializeFlow(stage, null);
-        FlowController.getInstance().goViewInWindow("PantInicio");
+        FlowController.getInstance().goViewInWindow("PantPrincipal");
     }
 
     /**
