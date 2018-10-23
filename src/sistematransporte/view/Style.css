@@ -6,10 +6,21 @@ and open the template in the editor.
 /* 
     Created on : Oct 22, 2018, 1:14:59 PM
     Author     : Kevin F
+#5c6667
+#0c7e43
 */
 *{
-    -fx-background-color: gray;
+    -fx-text-fill: white;
+}
+#apCentro{
+    -fx-background-color: #5c6667;
 }
 #map{
     -fx-image: url("../resources/mapa.png")
+}
+#areaDelimitada{
+    -fx-image: url("../resources/AreaDelimitada.png")
+}
+.jfx-radio-button {
+  
 }
