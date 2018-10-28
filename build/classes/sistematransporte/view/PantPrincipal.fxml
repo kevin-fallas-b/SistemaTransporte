@@ -6,6 +6,7 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
@@ -42,5 +43,20 @@
       </JFXRadioButton>
       <JFXRadioButton fx:id="rbTraficoAlto" layoutX="697.0" layoutY="185.0" prefHeight="17.0" prefWidth="67.0" text="Alto" toggleGroup="$tgTrafico" />
       <JFXRadioButton fx:id="rbTraficoMedio" layoutX="596.0" layoutY="185.0" prefHeight="17.0" prefWidth="67.0" text="Medio" toggleGroup="$tgTrafico" />
+      <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="227.0" layoutY="333.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/accidente.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="174.0" layoutY="358.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/trabajoVia.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="39.0" fitWidth="36.0" layoutX="193.0" layoutY="422.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/racing.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

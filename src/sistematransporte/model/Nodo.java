@@ -5,29 +5,21 @@
  */
 package sistematransporte.model;
 
+import java.util.List;
+
 /**
  *
  * @author Kevin F
  */
 public class Nodo {
-    private Integer peso;
     private Double posX;
     private Double posY;
+    List <Arista> saliente;
     
     public Nodo(){
-        this.peso=0;
         this.posX=0.00;
         this.posY=0.00;
     }
-
-    public Integer getPeso() {
-        return peso;
-    }
-
-    public void setPeso(Integer peso) {
-        this.peso = peso;
-    }
-
     public Double getPosX() {
         return posX;
     }
