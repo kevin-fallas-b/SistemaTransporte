@@ -15,9 +15,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import sistematransporte.model.Mapa;
 
 /**
  * FXML Controller class
@@ -29,15 +29,11 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private AnchorPane apCentro;
     @FXML
-    private ImageView ivMapa;
-    @FXML
     private JFXToggleButton tbMostrarArea;
     @FXML
     private ImageView ivAreaDelimitada;
     @FXML
     private RadioButton rbDirigido;
-
-    private ToggleGroup tgAlgoritmo;
     @FXML
     private JFXRadioButton rbNoDirigido;
     @FXML
@@ -60,13 +56,17 @@ public class PantPrincipalController extends Controller implements Initializable
     private JFXRadioButton rbTraficoAlto;
     @FXML
     private JFXRadioButton rbTraficoMedio;
+    private Mapa mapa;
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ivAreaDelimitada.setVisible(false);
         tbMostrarArea.setSelected(false);
+        apCentro.getChildren().remove(ivAreaDelimitada);
+        iniciarMapa();
     }
 
     @Override
@@ -81,5 +81,13 @@ public class PantPrincipalController extends Controller implements Initializable
             ivAreaDelimitada.setVisible(false);
         }
     }
-
+    
+    private void iniciarMapa(){
+        ivAreaDelimitada.setVisible(false);
+        mapa = new Mapa();
+        ivAreaDelimitada.setOnMouseReleased(mapa.seleccionarDestino);    
+        apCentro.getChildren().add(mapa);
+        apCentro.getChildren().add(ivAreaDelimitada);
+        
+    }
 }
