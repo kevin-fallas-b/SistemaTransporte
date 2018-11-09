@@ -14,7 +14,7 @@ import sistematransporte.util.FlowController;
  * @author Kevin F
  */
 public class SistemaTransporte extends Application {
-    
+    public static Boolean mostrarNodos=false;
     @Override
     public void start(Stage stage) throws Exception {
         FlowController.getInstance().InitializeFlow(stage, null);

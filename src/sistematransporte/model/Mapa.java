@@ -5,7 +5,10 @@
  */
 package sistematransporte.model;
 
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +20,7 @@ import javafx.scene.input.MouseEvent;
  */
 public class Mapa extends ImageView {
 
-    private List<Nodo> destinos;
+    private LinkedList<Nodo> destinos = new LinkedList();
 
     public Mapa(Image image) {
         
@@ -43,11 +46,29 @@ public class Mapa extends ImageView {
         this.setId("map");
     }
 
+    public void agregarDestino(Nodo nod){
+        destinos.add(nod);
+    }
+    
+    public void guardarDestinosAArchivo() throws UnsupportedEncodingException, FileNotFoundException{
+        PrintWriter writer = new PrintWriter("src/sistematransporte/util/Destinos.txt", "UTF-8");
+        while(!destinos.isEmpty()){
+            Nodo nod = destinos.removeFirst();
+            String cordenadas= nod.getPosX()+"$"+nod.getPosY();
+            writer.println(cordenadas);
+        }
+        writer.close();
+    }
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         //Node nodo = (Node) event.getSource();
         
-        System.out.println("EJE X " + event.getSceneX() + " EJE Y " + event.getSceneY());
-
+        /*System.out.println("EJE X " + event.getSceneX() + " EJE Y " + event.getSceneY());
+        System.out.println("Valor de Mostrar Nodos: "+sistematransporte.SistemaTransporte.mostrarNodos);
+        if(sistematransporte.SistemaTransporte.mostrarNodos){
+            Circle circle = new Circle(40.00);
+            circle.setFill(javafx.scene.paint.Color.RED);
+            
+        }*/
     };
 }

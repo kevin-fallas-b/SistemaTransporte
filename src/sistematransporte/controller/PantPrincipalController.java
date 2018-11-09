@@ -8,16 +8,24 @@ package sistematransporte.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 import sistematransporte.model.Mapa;
+import sistematransporte.model.Nodo;
 
 /**
  * FXML Controller class
@@ -57,6 +65,10 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private JFXRadioButton rbTraficoMedio;
     private Mapa mapa;
+    @FXML
+    private JFXToggleButton tgMostrarNodos;
+    @FXML
+    private JFXButton btnGuardarDesitnos;
     /**
      * Initializes the controller class.
      * @param url
@@ -67,6 +79,7 @@ public class PantPrincipalController extends Controller implements Initializable
         tbMostrarArea.setSelected(false);
         apCentro.getChildren().remove(ivAreaDelimitada);
         iniciarMapa();
+        apCentro.setOnMouseReleased(seleccionarDestino);
     }
 
     @Override
@@ -89,5 +102,41 @@ public class PantPrincipalController extends Controller implements Initializable
         apCentro.getChildren().add(mapa);
         apCentro.getChildren().add(ivAreaDelimitada);
         
+    }
+
+    @FXML
+    private void presionarToggleMostrar(ActionEvent event) {
+        if(tgMostrarNodos.selectedProperty().getValue()){
+            sistematransporte.SistemaTransporte.mostrarNodos=true;
+        }else{
+            sistematransporte.SistemaTransporte.mostrarNodos=false;
+        }
+    }
+    
+    public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
+
+        //Node nodo = (Node) event.getSource();
+        
+        System.out.println("EJE X " + event.getSceneX() + " EJE Y " + event.getSceneY());
+        if(sistematransporte.SistemaTransporte.mostrarNodos){
+            Circle circle = new Circle(10.00);
+            circle.setLayoutX(event.getSceneX());
+            circle.setLayoutY(event.getSceneY());
+            circle.setFill(javafx.scene.paint.Color.RED);
+            apCentro.getChildren().add(circle);
+            Nodo nod = new Nodo(event.getSceneX(),event.getSceneY());
+            mapa.agregarDestino(nod);
+        }
+    };
+
+    @FXML
+    private void presionarBtnGuardarDestinos(ActionEvent event) {
+        try {
+            mapa.guardarDestinosAArchivo();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
