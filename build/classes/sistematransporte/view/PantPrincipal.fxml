@@ -15,7 +15,6 @@
         <URL value="@Style.css" />
     </stylesheets>
    <children>
-      <ImageView id="map" fx:id="ivMapa" fitHeight="600.0" fitWidth="422.0" layoutX="14.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <JFXToggleButton fx:id="tbMostrarArea" layoutX="423.0" layoutY="542.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#presionarToggleArea" prefHeight="58.0" prefWidth="206.0" text="Mostrar Area Delimitada" />
       <ImageView id="areaDelimitada" fx:id="ivAreaDelimitada" fitHeight="600.0" fitWidth="422.0" layoutX="24.0" layoutY="10.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Label layoutX="629.0" layoutY="23.0" text="Grafo" />
