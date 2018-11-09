@@ -12,12 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -42,17 +38,19 @@ public class Mapa extends ImageView {
 
     public Mapa() {
         super();
-        this.setOnMouseReleased(seleccionarDestino);
         this.setFitHeight(600);
         this.setFitWidth(422);
         this.setLayoutX(0);
         this.setLayoutY(0);
-        this.setOnMouseReleased(seleccionarDestino);
         this.setId("map");
     }
 
     public void agregarDestino(Nodo nod) {
         destinos.add(nod);
+    }
+
+        public LinkedList<Nodo> getDestinos() {
+        return destinos;
     }
 
     public void guardarDestinosAArchivo() throws UnsupportedEncodingException, FileNotFoundException {
@@ -64,22 +62,7 @@ public class Mapa extends ImageView {
         }
         writer.close();
     }
-    public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
-
-        //Node nodo = (Node) event.getSource();
-        /*System.out.println("EJE X " + event.getSceneX() + " EJE Y " + event.getSceneY());
-        System.out.println("Valor de Mostrar Nodos: "+sistematransporte.SistemaTransporte.mostrarNodos);
-        if(sistematransporte.SistemaTransporte.mostrarNodos){
-            Circle circle = new Circle(40.00);
-            circle.setFill(javafx.scene.paint.Color.RED);
-            
-        }*/
-    };
-
-    public LinkedList<Nodo> getDestinos() {
-        return destinos;
-    }
-
+    
     public void cargarNodo() throws FileNotFoundException, IOException {
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/Destinos.txt"));
         String line = null;
@@ -88,9 +71,9 @@ public class Mapa extends ImageView {
             parts = line.split("\\$");
             Double posx = Double.valueOf(parts[0]);
             Double posy = Double.valueOf(parts[1]);
-            System.out.println("X: "+posx+"\nY: "+posy);
             Nodo nod = new Nodo(posx,posy);
             destinos.add(nod);
         }
+        System.out.println("Nodos Cargados.");
     }
 }
