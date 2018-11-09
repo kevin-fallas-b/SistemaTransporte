@@ -43,5 +43,7 @@
       <JFXRadioButton fx:id="rbTraficoMedio" layoutX="596.0" layoutY="185.0" prefHeight="17.0" prefWidth="67.0" text="Medio" toggleGroup="$tgTrafico" />
       <JFXToggleButton fx:id="tgMostrarNodos" layoutX="667.0" layoutY="536.0" onAction="#presionarToggleMostrar" text="Mostrar Nodos" />
       <JFXButton fx:id="btnGuardarDesitnos" layoutX="845.0" layoutY="553.0" onAction="#presionarBtnGuardarDestinos" text="Guardar Destinos" />
+      <JFXButton fx:id="btnPintarNodos" layoutX="845.0" layoutY="524.0" onAction="#PresionarBtnPintarNodos" text="Pintar Nodos" />
+      <JFXButton fx:id="btnCargarNodos" layoutX="843.0" layoutY="493.0" onAction="#presionarBtnCargarNodos" text="Cargar Nodos" />
    </children>
 </AnchorPane>

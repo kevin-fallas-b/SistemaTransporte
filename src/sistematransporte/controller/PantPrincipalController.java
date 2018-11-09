@@ -9,8 +9,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,6 +71,10 @@ public class PantPrincipalController extends Controller implements Initializable
     private JFXToggleButton tgMostrarNodos;
     @FXML
     private JFXButton btnGuardarDesitnos;
+    @FXML
+    private JFXButton btnPintarNodos;
+    @FXML
+    private JFXButton btnCargarNodos;
     /**
      * Initializes the controller class.
      * @param url
@@ -119,7 +125,7 @@ public class PantPrincipalController extends Controller implements Initializable
         
         System.out.println("EJE X " + event.getSceneX() + " EJE Y " + event.getSceneY());
         if(sistematransporte.SistemaTransporte.mostrarNodos){
-            Circle circle = new Circle(10.00);
+            Circle circle = new Circle(5.00);
             circle.setLayoutX(event.getSceneX());
             circle.setLayoutY(event.getSceneY());
             circle.setFill(javafx.scene.paint.Color.RED);
@@ -138,5 +144,23 @@ public class PantPrincipalController extends Controller implements Initializable
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @FXML
+    private void PresionarBtnPintarNodos(ActionEvent event) {
+        LinkedList<Nodo> destinos = mapa.getDestinos();
+        while(!destinos.isEmpty()){
+            Nodo nod = destinos.removeFirst();
+            Circle circle = new Circle(5.00);
+            circle.setLayoutX(nod.getPosX());
+            circle.setLayoutY(nod.getPosY());
+            circle.setFill(javafx.scene.paint.Color.RED);
+            apCentro.getChildren().add(circle);
+        }
+    }
+
+    @FXML
+    private void presionarBtnCargarNodos(ActionEvent event) throws IOException {
+        mapa.cargarNodo();
     }
 }
