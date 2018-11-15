@@ -20,6 +20,10 @@ public class Nodo {
         this.posX=0.00;
         this.posY=0.00;
     }
+    public Nodo(Double x, Double y){
+        this.posX=x;
+        this.posY=y;
+    }
     public Double getPosX() {
         return posX;
     }

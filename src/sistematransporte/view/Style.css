@@ -18,10 +18,10 @@ imagen del carro accidentado o de obstruccion en la vida tiene que ser de 30x25
     -fx-background-color: #5c6667;
 }
 #map{
-    -fx-image: url("../resources/mapa.png")
+    -fx-image: url("../resources/mapa.png");
 }
 #areaDelimitada{
-    -fx-image: url("../resources/AreaDelimitada.png")
+    -fx-image: url("../resources/AreaDelimitada.png");
 }
 .jfx-radio-button {
   
