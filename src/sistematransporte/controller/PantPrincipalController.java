@@ -167,7 +167,6 @@ public class PantPrincipalController extends Controller implements Initializable
         }
 
     }
-public Nodo nodo1 = null;
     
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
@@ -180,20 +179,8 @@ public Nodo nodo1 = null;
             while (x1 <= x2) {
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
-                        System.out.println("Seleccionado");
                         nodo.setFill(Color.AQUA);
-                        System.out.println(nodo.toString());
-                        
-                        if(nodo1 == null){
-                            nodo1 = nodo;
-                        }
-                        else{
-                            
-                            Arista arista = new Arista(nodo1.getCenterX(), nodo1.getCenterY(), nodo.getCenterX(), nodo.getCenterY());
-                            apCentro.getChildren().add(arista);
-                            nodo1 = null;
-                        }
-                        
+                        System.out.println("Arista Adyacentes: "+ nodo.getAristasAdyacentes().size());
                         x1 = x2;
                         y1 = y2;
                     }
