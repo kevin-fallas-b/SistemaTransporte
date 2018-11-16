@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import sistematransporte.model.Arista;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -167,7 +168,8 @@ public class PantPrincipalController extends Controller implements Initializable
         }
 
     }
-
+public Nodo nodo1 = null;
+    
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -179,9 +181,20 @@ public class PantPrincipalController extends Controller implements Initializable
             while (x1 <= x2) {
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
-                        //System.out.println("Seleccionado");
+                        System.out.println("Seleccionado");
                         nodo.setFill(Color.AQUA);
                         System.out.println(nodo.toString());
+                        
+                        if(nodo1 == null){
+                            nodo1 = nodo;
+                        }
+                        else{
+                            
+                            Arista arista = new Arista(nodo1.getCenterX(), nodo1.getCenterY(), nodo.getCenterX(), nodo.getCenterY());
+                            apCentro.getChildren().add(arista);
+                            nodo1 = null;
+                        }
+                        
                         x1 = x2;
                         y1 = y2;
                     }
