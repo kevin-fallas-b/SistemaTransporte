@@ -20,12 +20,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -79,22 +83,27 @@ public class PantPrincipalController extends Controller implements Initializable
     private JFXToggleButton tbOpcionesDesarrollador;
     @FXML
     private AnchorPane apOpcionesDes;
-    private Boolean desarrollador=false;
+    private Boolean desarrollador = false;
     @FXML
     private JFXButton btnOcultarNodos;
     private LinkedList<Circle> dibujosNodos = new LinkedList<Circle>();//lista de los circulos de nodos
+
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+       
+        
         tbMostrarArea.setSelected(false);
         apCentro.getChildren().remove(ivAreaDelimitada);
         iniciarMapa();
         apCentro.setOnMouseReleased(seleccionarDestino);
         apOpcionesDes.setVisible(false);
+        
     }
 
     @Override
@@ -109,37 +118,53 @@ public class PantPrincipalController extends Controller implements Initializable
             ivAreaDelimitada.setVisible(false);
         }
     }
-    
-    private void iniciarMapa(){
+
+    private void iniciarMapa() {
+        
         ivAreaDelimitada.setVisible(false);
         mapa = new Mapa();
-        //ivAreaDelimitada.setOnMouseReleased(mapa.seleccionarDestino);    
+        
+        Line line = new Line(178, 121, 192, 57);
+        
+        ivAreaDelimitada.setOnMouseReleased(seleccionarDestino);
         apCentro.getChildren().add(mapa);
         apCentro.getChildren().add(ivAreaDelimitada);
-        
+        apCentro.getChildren().add(line);
     }
 
     @FXML
     private void presionarToggleMostrar(ActionEvent event) {
-        if(tgMostrarNodos.selectedProperty().getValue()){
-            sistematransporte.SistemaTransporte.mostrarNodos=true;
-        }else{
-            sistematransporte.SistemaTransporte.mostrarNodos=false;
+        if (tgMostrarNodos.selectedProperty().getValue()) {
+            sistematransporte.SistemaTransporte.mostrarNodos = true;
+        } else {
+            sistematransporte.SistemaTransporte.mostrarNodos = false;
         }
     }
-    
-    public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
-        if(sistematransporte.SistemaTransporte.mostrarNodos && event.getSceneX()<422.00){
-            Circle circle = new Circle(5.00);
-            circle.setLayoutX(event.getSceneX());
-            circle.setLayoutY(event.getSceneY());
-            circle.setFill(javafx.scene.paint.Color.RED);
-            apCentro.getChildren().add(circle);
-            Nodo nod = new Nodo(event.getSceneX(),event.getSceneY());
-            mapa.agregarDestino(nod);
-        }
-    };
 
+    public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
+
+        Double y1 = event.getSceneY() - 10;
+        Double y2 = event.getSceneY() + 10;
+
+        while (y1 <= y2) {
+            Double x1 = event.getSceneX() - 10;
+            Double x2 = event.getSceneX() + 10;
+            while (x1 <= x2) {
+                for (Circle circle : dibujosNodos) {
+                    if (x1 == circle.getLayoutX() && y1 == circle.getLayoutY()) {
+                        System.out.println("Seleccionado");
+                        circle.setFill(Color.AQUA);
+                        x1 = x2;
+                        y1 = y2;
+                    }
+                }
+                x1++;
+            }
+            y1++;
+        }
+
+    };
+    
     @FXML
     private void presionarBtnGuardarDestinos(ActionEvent event) {
         try {
@@ -154,7 +179,7 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private void PresionarBtnPintarNodos(ActionEvent event) {
         LinkedList<Nodo> destinos = mapa.getDestinos();
-        while(!destinos.isEmpty()){
+        while (!destinos.isEmpty()) {
             Nodo nod = destinos.removeFirst();
             Circle circle = new Circle(5.00);
             circle.setLayoutX(nod.getPosX());
@@ -172,12 +197,12 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void presionarTbOpcionesDesarrollador(ActionEvent event) {
-        if(tbOpcionesDesarrollador.selectedProperty().getValue()){
+        if (tbOpcionesDesarrollador.selectedProperty().getValue()) {
             apOpcionesDes.setVisible(true);
-        }else{
+        } else {
             apOpcionesDes.setVisible(false);
         }
-        
+
     }
 
     @FXML

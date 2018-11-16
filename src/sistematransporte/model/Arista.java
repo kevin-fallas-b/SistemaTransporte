@@ -13,7 +13,7 @@ public class Arista {
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
-
+    
     public Nodo getOrigen() {
         return origen;
     }
