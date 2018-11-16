@@ -5,17 +5,27 @@
  */
 package sistematransporte.model;
 
+import javafx.scene.shape.Line;
+
 /**
  *
  * @author Kevin F
  */
-public class Arista {
+public class Arista extends Line{
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
     
     public Nodo getOrigen() {
         return origen;
+    }
+
+    public Arista() {
+        super();
+    }
+
+    public Arista(double startX, double startY, double endX, double endY) {
+        super(startX, startY, endX, endY);
     }
 
     public void setOrigen(Nodo origen) {
@@ -36,6 +46,5 @@ public class Arista {
 
     public void setPeso(Integer peso) {
         this.peso = peso;
-    }
-    
+    }    
 }

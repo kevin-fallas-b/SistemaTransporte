@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
+import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -29,6 +31,7 @@ public class Mapa extends ImageView {
         this.setLayoutX(0);
         this.setLayoutY(0);
         this.setId("map");
+        
     }
 
     public void agregarDestino(Nodo nod) {
@@ -43,13 +46,14 @@ public class Mapa extends ImageView {
         PrintWriter writer = new PrintWriter("src/sistematransporte/util/Destinos.txt", "UTF-8");
         while (!destinos.isEmpty()) {
             Nodo nod = destinos.removeFirst();
-            String cordenadas = nod.getPosX() + "$" + nod.getPosY();
+            String cordenadas = nod.getCenterX() + "$" + nod.getCenterY();
             writer.println(cordenadas);
         }
         writer.close();
     }
 
     public void cargarNodo() throws FileNotFoundException, IOException {
+        
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/Destinos.txt"));
         String line = null;
 
@@ -58,10 +62,13 @@ public class Mapa extends ImageView {
             parts = line.split("\\$");
             Double posx = Double.valueOf(parts[0]);
             Double posy = Double.valueOf(parts[1]);
-            Nodo nod = new Nodo(posx, posy);
+            
+            Nodo nod = new Nodo(posx, posy, 5.00, Color.CORAL);
+            nod.setPuntoMapa(new Point2D(posx, posy));
+            
             destinos.add(nod);
         }
-
-        System.out.println("Nodos Cargados.");
+        
+        //System.out.println("Nodos Cargados.");
     }
 }

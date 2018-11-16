@@ -43,12 +43,11 @@
       <JFXToggleButton fx:id="tbOpcionesDesarrollador" layoutX="837.0" layoutY="3.0" onAction="#presionarTbOpcionesDesarrollador" text="Opciones de Desarrollador" />
       <AnchorPane fx:id="apOpcionesDes" layoutX="430.0" layoutY="473.0" prefHeight="120.0" prefWidth="618.0">
          <children>
-            <JFXButton fx:id="btnCargarNodos" layoutX="412.0" layoutY="89.0" onAction="#presionarBtnCargarNodos" text="Cargar Nodos" />
+            <JFXButton fx:id="btnCargarNodos" layoutX="406.0" layoutY="61.0" onAction="#presionarBtnCargarNodos" text="Cargar Nodos" />
             <JFXToggleButton fx:id="tgMostrarNodos" layoutX="234.0" layoutY="60.0" onAction="#presionarToggleMostrar" text="Crear Nodos" />
-            <JFXButton fx:id="btnPintarNodos" layoutX="502.0" layoutY="60.0" onAction="#PresionarBtnPintarNodos" text="Pintar Nodos" />
-            <JFXButton fx:id="btnGuardarDesitnos" layoutX="502.0" layoutY="89.0" onAction="#presionarBtnGuardarDestinos" text="Guardar Destinos" />
+            <JFXButton fx:id="btnGuardarDesitnos" layoutX="452.0" layoutY="89.0" onAction="#presionarBtnGuardarDestinos" text="Guardar Destinos" />
             <JFXToggleButton fx:id="tbMostrarArea" layoutX="5.0" layoutY="60.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#presionarToggleArea" prefHeight="58.0" prefWidth="206.0" text="Mostrar Area Delimitada" />
-            <JFXButton fx:id="btnOcultarNodos" layoutX="408.0" layoutY="60.0" onAction="#presionarBtnOcultarNodos" text="Ocultar Nodos" />
+            <JFXButton fx:id="btnOcultarNodos" layoutX="505.0" layoutY="60.0" onAction="#presionarBtnOcultarNodos" text="Ocultar Nodos" />
          </children>
       </AnchorPane>
    </children>

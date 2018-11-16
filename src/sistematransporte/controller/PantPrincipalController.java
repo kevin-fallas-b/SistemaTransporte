@@ -8,11 +8,8 @@ package sistematransporte.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,16 +17,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -70,7 +63,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private JFXRadioButton rbTraficoAlto;
     @FXML
     private JFXRadioButton rbTraficoMedio;
-    private Mapa mapa;
+    private Mapa mapa = new Mapa();
     @FXML
     private JFXToggleButton tgMostrarNodos;
     @FXML
@@ -83,10 +76,8 @@ public class PantPrincipalController extends Controller implements Initializable
     private JFXToggleButton tbOpcionesDesarrollador;
     @FXML
     private AnchorPane apOpcionesDes;
-    private Boolean desarrollador = false;
     @FXML
     private JFXButton btnOcultarNodos;
-    private LinkedList<Circle> dibujosNodos = new LinkedList<Circle>();//lista de los circulos de nodos
 
     /**
      * Initializes the controller class.
@@ -96,14 +87,17 @@ public class PantPrincipalController extends Controller implements Initializable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
         
-        tbMostrarArea.setSelected(false);
-        apCentro.getChildren().remove(ivAreaDelimitada);
-        iniciarMapa();
-        apCentro.setOnMouseReleased(seleccionarDestino);
-        apOpcionesDes.setVisible(false);
-        
+        try {
+            tbMostrarArea.setSelected(false);
+            apCentro.getChildren().remove(ivAreaDelimitada);
+            
+            iniciarMapa();
+            apCentro.setOnMouseReleased(seleccionarDestino);
+            apOpcionesDes.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -119,17 +113,13 @@ public class PantPrincipalController extends Controller implements Initializable
         }
     }
 
-    private void iniciarMapa() {
+    private void iniciarMapa() throws IOException {
         
         ivAreaDelimitada.setVisible(false);
-        mapa = new Mapa();
-        
-        Line line = new Line(178, 121, 192, 57);
-        
         ivAreaDelimitada.setOnMouseReleased(seleccionarDestino);
         apCentro.getChildren().add(mapa);
         apCentro.getChildren().add(ivAreaDelimitada);
-        apCentro.getChildren().add(line);
+        cargarNodos();
     }
 
     @FXML
@@ -141,6 +131,21 @@ public class PantPrincipalController extends Controller implements Initializable
         }
     }
 
+    public void cargarNodos() {
+        try {
+            
+            mapa.cargarNodo();
+            
+            mapa.getDestinos().stream().forEach((nodo) -> {
+                apCentro.getChildren().add(nodo);
+            });
+            
+        } catch (IOException ex) {
+            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -150,10 +155,11 @@ public class PantPrincipalController extends Controller implements Initializable
             Double x1 = event.getSceneX() - 10;
             Double x2 = event.getSceneX() + 10;
             while (x1 <= x2) {
-                for (Circle circle : dibujosNodos) {
-                    if (x1 == circle.getLayoutX() && y1 == circle.getLayoutY()) {
+                for (Nodo nodo : mapa.getDestinos()) {
+                    if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                         System.out.println("Seleccionado");
-                        circle.setFill(Color.AQUA);
+                        nodo.setFill(Color.AQUA);
+                        System.out.println(nodo.toString());
                         x1 = x2;
                         y1 = y2;
                     }
@@ -162,37 +168,29 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             y1++;
         }
-
     };
-    
+
     @FXML
     private void presionarBtnGuardarDestinos(ActionEvent event) {
-        try {
+        /*try {
             mapa.guardarDestinosAArchivo();
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     @FXML
     private void PresionarBtnPintarNodos(ActionEvent event) {
-        LinkedList<Nodo> destinos = mapa.getDestinos();
-        while (!destinos.isEmpty()) {
-            Nodo nod = destinos.removeFirst();
-            Circle circle = new Circle(5.00);
-            circle.setLayoutX(nod.getPosX());
-            circle.setLayoutY(nod.getPosY());
-            circle.setFill(javafx.scene.paint.Color.RED);
-            apCentro.getChildren().add(circle);
-            dibujosNodos.add(circle);
-        }
+        
     }
 
     @FXML
-    private void presionarBtnCargarNodos(ActionEvent event) throws IOException {
-        mapa.cargarNodo();
+    private void presionarBtnCargarNodos(ActionEvent event){
+        mapa.getDestinos().stream().forEach((nodo) -> {
+            nodo.setVisible(true);
+        });
     }
 
     @FXML
@@ -202,12 +200,12 @@ public class PantPrincipalController extends Controller implements Initializable
         } else {
             apOpcionesDes.setVisible(false);
         }
-
     }
 
     @FXML
     private void presionarBtnOcultarNodos(ActionEvent event) {
-        apCentro.getChildren().removeAll(dibujosNodos);
-        dibujosNodos = new LinkedList<Circle>();
+        mapa.getDestinos().stream().forEach((nodo) -> {
+            nodo.setVisible(false);
+        });
     }
 }

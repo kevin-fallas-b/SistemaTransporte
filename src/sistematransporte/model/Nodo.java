@@ -6,38 +6,54 @@
 package sistematransporte.model;
 
 import java.util.List;
+import javafx.geometry.Point2D;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 
 /**
  *
  * @author Kevin F
  */
-public class Nodo {
-    private Double posX;
-    private Double posY;
-    List <Arista> saliente;
-    
-    public Nodo(){
-        this.posX=0.00;
-        this.posY=0.00;
-    }
-    public Nodo(Double x, Double y){
-        this.posX=x;
-        this.posY=y;
-    }
-    public Double getPosX() {
-        return posX;
+public class Nodo extends Circle {
+   
+    private List <Arista> saliente;
+    private Point2D puntoMapa; 
+
+    public Point2D getPuntoMapa() {
+        return puntoMapa;
     }
 
-    public void setPosX(Double posX) {
-        this.posX = posX;
-    }
-
-    public Double getPosY() {
-        return posY;
-    }
-
-    public void setPosY(Double posY) {
-        this.posY = posY;
+    public void setPuntoMapa(Point2D puntoMapa) {
+        this.puntoMapa = puntoMapa;
     }
     
+    public Nodo(double radius) {
+        super(radius);
+    }
+
+    public Nodo(double radius, Paint fill) {
+        super(radius, fill);
+    }
+
+    public Nodo() {
+    }
+
+    public Nodo(double centerX, double centerY, double radius) {
+        super(centerX, centerY, radius);
+    }
+
+    public Nodo(double centerX, double centerY, double radius, Paint fill) {
+        super(centerX, centerY, radius, fill);
+    }
+
+    public List<Arista> getSaliente() {
+        return saliente;
+    }
+
+    public void setSaliente(List<Arista> saliente) {
+        this.saliente = saliente;
+    }
+
+    
+  
 }

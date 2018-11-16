@@ -8,15 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-<<<<<<< HEAD
-    <jar href="SistemaTransporte.jar" size="560656" download="eager" />
-=======
-<<<<<<< HEAD
-    <jar href="SistemaTransporte.jar" size="555337" download="eager" />
-=======
-    <jar href="SistemaTransporte.jar" size="560531" download="eager" />
->>>>>>> 293b433bd19aa9456893a51f97e1f5c615ea39a5
->>>>>>> 0a91118533670057b6707056a14eca7432940a49
+    <jar href="SistemaTransporte.jar" size="560731" download="eager" />
     <jar href="lib\jfoenix-8.0.7.jar" size="2631271" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="SistemaTransporte" >
