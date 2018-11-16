@@ -17,7 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -145,10 +144,6 @@ public class PantPrincipalController extends Controller implements Initializable
             
             mapa.cargarNodo();
             
-            mapa.getDestinos().stream().forEach((nodo) -> {
-                apCentro.getChildren().add(nodo);
-            });
-            
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -161,6 +156,10 @@ public class PantPrincipalController extends Controller implements Initializable
             
             mapa.getAristas().stream().forEach((arista) -> {
                 apCentro.getChildren().add(arista);
+            });
+            
+            mapa.getDestinos().stream().forEach((nodo) -> {
+                apCentro.getChildren().add(nodo);
             });
             
         } catch (IOException ex) {
@@ -226,6 +225,9 @@ public Nodo nodo1 = null;
         mapa.getDestinos().stream().forEach((nodo) -> {
             nodo.setVisible(true);
         });
+        mapa.getAristas().stream().forEach((arista) -> {
+            arista.setVisible(true);
+        });
     }
 
     @FXML
@@ -241,6 +243,9 @@ public Nodo nodo1 = null;
     private void presionarBtnOcultarNodos(ActionEvent event) {
         mapa.getDestinos().stream().forEach((nodo) -> {
             nodo.setVisible(false);
+        });
+        mapa.getAristas().stream().forEach((arista) -> {
+            arista.setVisible(false);
         });
     }
 }

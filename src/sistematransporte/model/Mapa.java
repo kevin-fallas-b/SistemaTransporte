@@ -72,8 +72,6 @@ public class Mapa extends ImageView {
             
             destinos.add(nod);
         }
-        
-        //System.out.println("Nodos Cargados.");
     }
      public void cagarAristas() throws FileNotFoundException, IOException {
         
@@ -88,12 +86,12 @@ public class Mapa extends ImageView {
             Double posx2 = Double.valueOf(parts[2]);
             Double posy2 = Double.valueOf(parts[3]);
             
-            Arista arista = new Arista(posx, posy, posx2, posy2); //= new Arista(posx, posy, 5.00, Color.CORAL);
-            //nod.setPuntoMapa(new Point2D(posx, posy));
+            Arista arista = new Arista(posx, posy, posx2, posy2); 
+            
+            arista.agregarNodos(destinos);
             
             aristas.add(arista);
         }
-        
-        //System.out.println("Nodos Cargados.");
     }
+
 }

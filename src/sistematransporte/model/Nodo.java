@@ -1,22 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package sistematransporte.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
-/**
- *
- * @author Kevin F
- */
 public class Nodo extends Circle {
    
-    private List <Arista> saliente;
+    private final List <Arista> aristas_Adyacentes = new ArrayList<>();
     private Point2D puntoMapa; 
 
     public Point2D getPuntoMapa() {
@@ -46,14 +38,7 @@ public class Nodo extends Circle {
         super(centerX, centerY, radius, fill);
     }
 
-    public List<Arista> getSaliente() {
-        return saliente;
+    public List<Arista> getAristasAdyacentes() {
+        return aristas_Adyacentes;
     }
-
-    public void setSaliente(List<Arista> saliente) {
-        this.saliente = saliente;
-    }
-
-    
-  
 }
