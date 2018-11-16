@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 public class Mapa extends ImageView {
 
     private final LinkedList <Nodo> destinos = new LinkedList();
-    
+    private final LinkedList <Arista> aristas = new LinkedList();
     public Mapa() {
         super();
         this.setFitHeight(600);
@@ -32,6 +32,10 @@ public class Mapa extends ImageView {
         this.setLayoutY(0);
         this.setId("map");
         
+    }
+
+    public LinkedList<Arista> getAristas() {
+        return aristas;
     }
 
     public void agregarDestino(Nodo nod) {
@@ -67,6 +71,27 @@ public class Mapa extends ImageView {
             nod.setPuntoMapa(new Point2D(posx, posy));
             
             destinos.add(nod);
+        }
+        
+        //System.out.println("Nodos Cargados.");
+    }
+     public void cagarAristas() throws FileNotFoundException, IOException {
+        
+        BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/aristas.txt"));
+        String line = null;
+
+        while ((line = reader.readLine()) != null) {
+            String[] parts;
+            parts = line.split("\\$");
+            Double posx = Double.valueOf(parts[0]);
+            Double posy = Double.valueOf(parts[1]);
+            Double posx2 = Double.valueOf(parts[2]);
+            Double posy2 = Double.valueOf(parts[3]);
+            
+            Arista arista = new Arista(posx, posy, posx2, posy2); //= new Arista(posx, posy, 5.00, Color.CORAL);
+            //nod.setPuntoMapa(new Point2D(posx, posy));
+            
+            aristas.add(arista);
         }
         
         //System.out.println("Nodos Cargados.");

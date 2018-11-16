@@ -127,6 +127,7 @@ public class PantPrincipalController extends Controller implements Initializable
         apCentro.getChildren().add(mapa);
         apCentro.getChildren().add(ivAreaDelimitada);
         cargarNodos();
+        cargarAristas();
     }
 
     @FXML
@@ -145,6 +146,20 @@ public class PantPrincipalController extends Controller implements Initializable
             
             mapa.getDestinos().stream().forEach((nodo) -> {
                 apCentro.getChildren().add(nodo);
+            });
+            
+        } catch (IOException ex) {
+            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    public void cargarAristas() {
+        try {
+            
+            mapa.cagarAristas();
+            
+            mapa.getAristas().stream().forEach((arista) -> {
+                apCentro.getChildren().add(arista);
             });
             
         } catch (IOException ex) {
