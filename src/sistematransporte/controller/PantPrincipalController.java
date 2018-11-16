@@ -23,7 +23,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import sistematransporte.model.Arista;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -181,6 +180,10 @@ public class PantPrincipalController extends Controller implements Initializable
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                         nodo.setFill(Color.AQUA);
                         System.out.println("Arista Adyacentes: "+ nodo.getAristasAdyacentes().size());
+                        nodo.getAristasAdyacentes().stream().forEach((arista) -> {
+                            System.out.println("Peso: "+ arista.getPeso());
+                        });
+                        
                         x1 = x2;
                         y1 = y2;
                     }

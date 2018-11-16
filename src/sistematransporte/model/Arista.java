@@ -7,6 +7,7 @@ package sistematransporte.model;
 
 import java.util.List;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 /**
@@ -30,6 +31,7 @@ public class Arista extends Line {
     public Arista(double startX, double startY, double endX, double endY) {
         super(startX, startY, endX, endY);
         this.setStrokeWidth(5.00);
+        this.setStroke(Color.BLUE);
     }
 
     public void setOrigen(Nodo origen) {
