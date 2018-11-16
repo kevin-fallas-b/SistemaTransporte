@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -95,6 +96,12 @@ public class PantPrincipalController extends Controller implements Initializable
             iniciarMapa();
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
+            
+            Nodo point = mapa.getDestinos().get(0);
+            Nodo point2 = mapa.getDestinos().get(1); 
+            
+            System.out.println(point.getPuntoMapa().distance(point2.getPuntoMapa()));
+            
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -157,7 +164,7 @@ public class PantPrincipalController extends Controller implements Initializable
             while (x1 <= x2) {
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
-                        System.out.println("Seleccionado");
+                        //System.out.println("Seleccionado");
                         nodo.setFill(Color.AQUA);
                         System.out.println(nodo.toString());
                         x1 = x2;
