@@ -10,6 +10,7 @@ public class Nodo extends Circle {
    
     private final List <Arista> aristas_Adyacentes = new ArrayList<>();
     private Point2D puntoMapa; 
+    private Integer numNodo;
 
     public Point2D getPuntoMapa() {
         return puntoMapa;
@@ -21,24 +22,38 @@ public class Nodo extends Circle {
     
     public Nodo(double radius) {
         super(radius);
+        this.numNodo=0;
     }
 
     public Nodo(double radius, Paint fill) {
         super(radius, fill);
+        this.numNodo=0;
     }
 
     public Nodo() {
+        this.numNodo=0;
     }
 
     public Nodo(double centerX, double centerY, double radius) {
         super(centerX, centerY, radius);
+        this.numNodo=0;
     }
 
-    public Nodo(double centerX, double centerY, double radius, Paint fill) {
+    public Nodo(double centerX, double centerY, double radius, Paint fill,Integer num) {
         super(centerX, centerY, radius, fill);
+        this.numNodo=num;
+    }
+
+    public Integer getNumNodo() {
+        return numNodo;
+    }
+
+    public void setNumNodo(Integer numNodo) {
+        this.numNodo = numNodo;
     }
 
     public List<Arista> getAristasAdyacentes() {
         return aristas_Adyacentes;
     }
+    
 }

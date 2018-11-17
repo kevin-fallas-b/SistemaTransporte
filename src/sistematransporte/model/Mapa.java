@@ -60,16 +60,16 @@ public class Mapa extends ImageView {
         
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/Destinos.txt"));
         String line = null;
-
+        Integer i=0;
         while ((line = reader.readLine()) != null) {
             String[] parts;
             parts = line.split("\\$");
             Double posx = Double.valueOf(parts[0]);
             Double posy = Double.valueOf(parts[1]);
             
-            Nodo nod = new Nodo(posx, posy, 5.00, Color.CORAL);
+            Nodo nod = new Nodo(posx, posy, 5.00, Color.CORAL,i);
             nod.setPuntoMapa(new Point2D(posx, posy));
-            
+            i++;
             destinos.add(nod);
         }
     }

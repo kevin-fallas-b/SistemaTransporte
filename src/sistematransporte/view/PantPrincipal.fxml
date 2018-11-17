@@ -30,8 +30,8 @@
       </JFXRadioButton>
       <JFXRadioButton fx:id="rbFloyd" layoutX="697.0" layoutY="103.0" text="Floyd" toggleGroup="$tgAlogiritmo" />
       <Label layoutX="619.0" layoutY="237.0" text="Opciones" />
-      <JFXButton fx:id="btnAccidente" layoutX="513.0" layoutY="267.0" text="Accidente" />
-      <JFXButton fx:id="btnReparacion" layoutX="697.0" layoutY="267.0" text="Reparacion Cosevi" />
+      <JFXButton fx:id="btnAccidente" layoutX="513.0" layoutY="267.0" onAction="#presionarBtnAccidente" text="Accidente" />
+      <JFXButton fx:id="btnReparacion" layoutX="697.0" layoutY="267.0" onAction="#presionarBtnReparacion" text="Reparacion Cosevi" />
       <Label layoutX="626.0" layoutY="155.0" text="Trafico" />
       <JFXRadioButton fx:id="rbTraficoBajo" layoutX="507.0" layoutY="185.0" prefHeight="17.0" prefWidth="70.0" selected="true" text="Bajo">
          <toggleGroup>

@@ -2,3 +2,7 @@
 *.properties
 *.html
 *.jar
+*.properties
+*.html
+*.jnlp
+*.class
