@@ -77,5 +77,5 @@ public class Arista extends Line {
         Double p = inicio.distance(fin);
         this.peso = p.intValue();
     }
-
+    
 }

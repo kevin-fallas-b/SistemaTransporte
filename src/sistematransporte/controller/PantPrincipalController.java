@@ -10,6 +10,8 @@ import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import sistematransporte.model.Arista;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -79,6 +82,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Mapa mapa = new Mapa();
     private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
     private Boolean agregarReparacion = false;//igual que arriba
+    private Integer matPeso[][]= new Integer[100][100];
     /**
      * Initializes the controller class.
      *
@@ -175,7 +179,7 @@ public class PantPrincipalController extends Controller implements Initializable
                 imagen.setLayoutX(event.getSceneX() - 15);
                 imagen.setLayoutY(event.getSceneY() - 12);
                 apCentro.getChildren().add(imagen);
-                
+                llenarMatPeso();
             }
         }
     };
@@ -192,10 +196,10 @@ public class PantPrincipalController extends Controller implements Initializable
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                         nodo.setFill(Color.AQUA);
-                        System.out.println("Nodo numero: "+nodo.getNumNodo());
-                        System.out.println("Arista Adyacentes: "+ nodo.getAristasAdyacentes().size());
+                        System.out.println("Click sobre nodo numero: "+nodo.getNumNodo()+" ,contiene " + nodo.getAristasAdyacentes().size()+ " aristas adyacentes" );
                         nodo.getAristasAdyacentes().stream().forEach((arista) -> {
-                            System.out.println("Peso: "+ arista.getPeso());
+                            System.out.println("Destino nodo num "+arista.getDestino().getNumNodo()+" origen: "+arista.getOrigen().getNumNodo());
+                            //System.out.println("Peso: "+ arista.getPeso());
                         });
                         
                         x1 = x2;
@@ -261,5 +265,21 @@ public class PantPrincipalController extends Controller implements Initializable
         agregarReparacion = true;
         agregarAccidente = false;
     }
-   
+    private void llenarMatPeso(){
+        for(int i=0;i<100;i++){
+            for(int j=0;j<100;j++){
+                matPeso[i][j]=0;
+            }
+        }
+        LinkedList<Nodo> nodos = mapa.getDestinos();
+        Nodo aux;
+        for(int k=0;k<nodos.size();k++){
+            aux=nodos.get(k);
+            List <Arista> nodosAdyacentes = aux.getAristasAdyacentes();
+            for(int i=0;i<nodosAdyacentes.size();i++){
+                Arista auxArista=nodosAdyacentes.get(i);
+                matPeso[aux.getNumNodo()][auxArista.getDestino().getNumNodo()]=auxArista.getPeso();
+            }
+        }
+    }
 }
