@@ -133,9 +133,6 @@ public class PantPrincipalController extends Controller implements Initializable
         try {
             mapa.cargarNodo();
             
-            mapa.cargarNodo();
-            
-            mapa.cargarNodo();
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -191,10 +188,15 @@ public class PantPrincipalController extends Controller implements Initializable
             while (x1 <= x2) {
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
+                        
                         nodo.setFill(Color.AQUA);
+                        
                         System.out.println("Nodo numero: "+nodo.getNumNodo());
+                        
                         System.out.println("Arista Adyacentes: "+ nodo.getAristasAdyacentes().size());
+                        
                         nodo.getAristasAdyacentes().stream().forEach((arista) -> {
+                           
                             System.out.println("Peso: "+ arista.getPeso());
                         });
                         
