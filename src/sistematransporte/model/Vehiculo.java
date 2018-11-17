@@ -11,4 +11,5 @@ package sistematransporte.model;
  */
 public class Vehiculo {
     Integer tiempo;//tiempo que lleva en movimiento el vehiculo, guardado en segundos
+    
 }

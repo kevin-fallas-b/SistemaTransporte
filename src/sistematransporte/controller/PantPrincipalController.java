@@ -63,7 +63,6 @@ public class PantPrincipalController extends Controller implements Initializable
     private JFXRadioButton rbTraficoAlto;
     @FXML
     private JFXRadioButton rbTraficoMedio;
-    private Mapa mapa = new Mapa();
     @FXML
     private JFXToggleButton tgMostrarNodos;
     @FXML
@@ -78,6 +77,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private AnchorPane apOpcionesDes;
     @FXML
     private JFXButton btnOcultarNodos;
+    private Mapa mapa = new Mapa();
 
     /**
      * Initializes the controller class.
@@ -87,19 +87,13 @@ public class PantPrincipalController extends Controller implements Initializable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         try {
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
-            
             iniciarMapa();
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
-            
-            Nodo point = mapa.getDestinos().get(0);
-            Nodo point2 = mapa.getDestinos().get(1); 
-            
-            System.out.println(point.getPuntoMapa().distance(point2.getPuntoMapa()));
             
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,7 +114,6 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     private void iniciarMapa() throws IOException {
-        
         ivAreaDelimitada.setVisible(false);
         ivAreaDelimitada.setOnMouseReleased(seleccionarDestino);
         apCentro.getChildren().add(mapa);
@@ -131,42 +124,36 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void presionarToggleMostrar(ActionEvent event) {
-        if (tgMostrarNodos.selectedProperty().getValue()) {
-            sistematransporte.SistemaTransporte.mostrarNodos = true;
-        } else {
-            sistematransporte.SistemaTransporte.mostrarNodos = false;
-        }
+        //sistematransporte.SistemaTransporte.mostrarNodos = tgMostrarNodos.selectedProperty().getValue();
     }
 
     public void cargarNodos() {
         try {
-            
             mapa.cargarNodo();
-            
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+
     public void cargarAristas() {
         try {
-            
             mapa.cagarAristas();
             
             mapa.getAristas().stream().forEach((arista) -> {
                 apCentro.getChildren().add(arista);
             });
-            
+
             mapa.getDestinos().stream().forEach((nodo) -> {
                 apCentro.getChildren().add(nodo);
             });
-            
+
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
+
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -179,11 +166,11 @@ public class PantPrincipalController extends Controller implements Initializable
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                         nodo.setFill(Color.AQUA);
-                        System.out.println("Arista Adyacentes: "+ nodo.getAristasAdyacentes().size());
+                        System.out.println("Arista Adyacentes: " + nodo.getAristasAdyacentes().size());
                         nodo.getAristasAdyacentes().stream().forEach((arista) -> {
-                            System.out.println("Peso: "+ arista.getPeso());
+                            System.out.println("Peso: " + arista.getPeso());
                         });
-                        
+
                         x1 = x2;
                         y1 = y2;
                     }
@@ -207,14 +194,16 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void PresionarBtnPintarNodos(ActionEvent event) {
-        
+
     }
 
     @FXML
-    private void presionarBtnCargarNodos(ActionEvent event){
+    private void presionarBtnCargarNodos(ActionEvent event) {
+        
         mapa.getDestinos().stream().forEach((nodo) -> {
             nodo.setVisible(true);
         });
+        
         mapa.getAristas().stream().forEach((arista) -> {
             arista.setVisible(true);
         });

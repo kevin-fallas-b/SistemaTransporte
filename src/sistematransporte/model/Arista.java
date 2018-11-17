@@ -57,19 +57,21 @@ public class Arista extends Line {
     public void agregarNodos(List<Nodo> nodos) {
         Point2D inicio = new Point2D(0, 0);
         Point2D fin = new Point2D(0, 0);
-
+        
         for (Nodo nodo : nodos) {
+            
             if (nodo.getCenterX() == getStartX() && nodo.getCenterY() == getStartY()) {
                 setOrigen(nodo);
                 nodo.getAristasAdyacentes().add(this);
                 inicio = nodo.getPuntoMapa();
+                
             } else if (nodo.getCenterX() == getEndX() && nodo.getCenterY() == getEndY()) {
                 setDestino(nodo);
                 nodo.getAristasAdyacentes().add(this);
                 fin = nodo.getPuntoMapa();
             }
         }
-
+        
         Double p = inicio.distance(fin);
         this.peso = p.intValue();
     }
