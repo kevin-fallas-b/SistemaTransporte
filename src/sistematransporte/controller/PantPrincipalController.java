@@ -91,6 +91,7 @@ public class PantPrincipalController extends Controller implements Initializable
         try {
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
+
             iniciarMapa();
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
@@ -114,6 +115,7 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     private void iniciarMapa() throws IOException {
+
         ivAreaDelimitada.setVisible(false);
         ivAreaDelimitada.setOnMouseReleased(seleccionarDestino);
         apCentro.getChildren().add(mapa);
