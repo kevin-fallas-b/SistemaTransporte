@@ -32,6 +32,8 @@ public class Arista extends Line {
         super(startX, startY, endX, endY);
         this.setStrokeWidth(5.00);
         this.setStroke(Color.BLUE);
+        
+        
     }
 
     public void setOrigen(Nodo origen) {

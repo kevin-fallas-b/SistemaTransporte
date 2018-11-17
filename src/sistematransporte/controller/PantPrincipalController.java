@@ -132,6 +132,8 @@ public class PantPrincipalController extends Controller implements Initializable
             mapa.cargarNodo();
             
             mapa.cargarNodo();
+            
+            mapa.cargarNodo();
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -195,7 +197,6 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void PresionarBtnPintarNodos(ActionEvent event) {
-
     }
 
     @FXML
