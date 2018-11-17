@@ -19,10 +19,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import sistematransporte.model.Arista;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -69,8 +71,6 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private JFXButton btnGuardarDesitnos;
     @FXML
-    private JFXButton btnPintarNodos;
-    @FXML
     private JFXButton btnCargarNodos;
     @FXML
     private JFXToggleButton tbOpcionesDesarrollador;
@@ -78,6 +78,8 @@ public class PantPrincipalController extends Controller implements Initializable
     private AnchorPane apOpcionesDes;
     @FXML
     private JFXButton btnOcultarNodos;
+    private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
+    private Boolean agregarReparacion = false;//igual que arriba
 
     /**
      * Initializes the controller class.
@@ -87,20 +89,21 @@ public class PantPrincipalController extends Controller implements Initializable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         try {
             tbMostrarArea.setSelected(false);
+            apCentro.setOnMouseClicked(onClick);
             apCentro.getChildren().remove(ivAreaDelimitada);
-            
+
             iniciarMapa();
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
-            
+
             Nodo point = mapa.getDestinos().get(0);
-            Nodo point2 = mapa.getDestinos().get(1); 
-            
+            Nodo point2 = mapa.getDestinos().get(1);
+
             System.out.println(point.getPuntoMapa().distance(point2.getPuntoMapa()));
-            
+
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,7 +123,7 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     private void iniciarMapa() throws IOException {
-        
+
         ivAreaDelimitada.setVisible(false);
         ivAreaDelimitada.setOnMouseReleased(seleccionarDestino);
         apCentro.getChildren().add(mapa);
@@ -140,33 +143,56 @@ public class PantPrincipalController extends Controller implements Initializable
 
     public void cargarNodos() {
         try {
-            
+
             mapa.cargarNodo();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+
     public void cargarAristas() {
         try {
-            
+
             mapa.cagarAristas();
-            
+
             mapa.getAristas().stream().forEach((arista) -> {
                 apCentro.getChildren().add(arista);
             });
-            
+
             mapa.getDestinos().stream().forEach((nodo) -> {
                 apCentro.getChildren().add(nodo);
             });
-            
+
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
+
+    private EventHandler<MouseEvent> onClick = (MouseEvent event) -> {
+        if (event.getSceneX() < 422) {
+            if (agregarAccidente || agregarReparacion) {
+                System.out.println("Agregando Detalles a carretera.");
+                ImageView imagen;
+                if (agregarAccidente) {
+                    imagen = new ImageView(new Image("sistematransporte/resources/accidente.png"));
+                    agregarAccidente = false;
+                } else {
+                    imagen = new ImageView(new Image("sistematransporte/resources/trabajoVia.png"));
+                    agregarReparacion = false;
+                }
+                imagen.setFitWidth(30.00);
+                imagen.setFitHeight(25.00);
+                imagen.setLayoutX(event.getSceneX() - 15);
+                imagen.setLayoutY(event.getSceneY() - 12);
+                apCentro.getChildren().add(imagen);
+                ubicarArista(event.getSceneX(), event.getSceneY());
+            }
+        }
+    };
+
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -179,11 +205,11 @@ public class PantPrincipalController extends Controller implements Initializable
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                         nodo.setFill(Color.AQUA);
-                        System.out.println("Arista Adyacentes: "+ nodo.getAristasAdyacentes().size());
+                        System.out.println("Arista Adyacentes: " + nodo.getAristasAdyacentes().size());
                         nodo.getAristasAdyacentes().stream().forEach((arista) -> {
-                            System.out.println("Peso: "+ arista.getPeso());
+                            System.out.println("Peso: " + arista.getPeso());
                         });
-                        
+
                         x1 = x2;
                         y1 = y2;
                     }
@@ -206,12 +232,7 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     @FXML
-    private void PresionarBtnPintarNodos(ActionEvent event) {
-        
-    }
-
-    @FXML
-    private void presionarBtnCargarNodos(ActionEvent event){
+    private void presionarBtnCargarNodos(ActionEvent event) {
         mapa.getDestinos().stream().forEach((nodo) -> {
             nodo.setVisible(true);
         });
@@ -237,5 +258,22 @@ public class PantPrincipalController extends Controller implements Initializable
         mapa.getAristas().stream().forEach((arista) -> {
             arista.setVisible(false);
         });
+    }
+
+    @FXML
+    private void presionarBtnAccidente(ActionEvent event) {
+        agregarAccidente = true;
+        agregarReparacion = false;
+    }
+
+    @FXML
+    private void presionarBtnReparacion(ActionEvent event) {
+        agregarReparacion = true;
+        agregarAccidente = false;
+    }
+
+    private Arista ubicarArista(Double posX, Double posY) {
+        Arista ar = new Arista();
+        return ar;
     }
 }

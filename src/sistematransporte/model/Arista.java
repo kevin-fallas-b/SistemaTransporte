@@ -19,6 +19,8 @@ public class Arista extends Line {
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
+    private Boolean habilitada; //por defecto es true, cambia a false si un accidente o una reparacion se coloca encima
+    private Boolean dobleVia; //ya que la mayoria es doble via, por defecto es true
 
     public Nodo getOrigen() {
         return origen;
@@ -32,6 +34,8 @@ public class Arista extends Line {
         super(startX, startY, endX, endY);
         this.setStrokeWidth(5.00);
         this.setStroke(Color.BLUE);
+        this.habilitada = true;
+        this.habilitada = true;
     }
 
     public void setOrigen(Nodo origen) {
