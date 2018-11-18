@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import sistematransporte.model.Arista;
+import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 
@@ -82,7 +83,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Mapa mapa = new Mapa();
     private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
     private Boolean agregarReparacion = false;//igual que arriba
-    private Integer matPeso[][] = new Integer[100][100];
+    public static Integer matPeso[][] = new Integer[100][100];
 
     /**
      * Initializes the controller class.
@@ -186,6 +187,7 @@ public class PantPrincipalController extends Controller implements Initializable
         }
     };
 
+   Nodo nodoAux = null;
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -199,15 +201,23 @@ public class PantPrincipalController extends Controller implements Initializable
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
 
                         nodo.setFill(Color.AQUA);
-
-                        System.out.println("Click sobre nodo numero: " + nodo.getNumNodo() + " ,contiene " + nodo.getAristasAdyacentes().size() + " aristas adyacentes");
-
-                        nodo.getAristasAdyacentes().stream().forEach((arista) -> {
-                            if (arista.getDestino().equals(nodo)) {
-                                System.out.println("Destino nodo num " + arista.getOrigen().getNumNodo() + " origen: " + arista.getDestino().getNumNodo());
-                            } else {
-                                System.out.println("Destino nodo num " + arista.getDestino().getNumNodo() + " origen: " + arista.getOrigen().getNumNodo());
-                            }
+                        if(nodoAux == null){
+                            nodoAux = nodo;
+                        }
+                        else{
+                            //Agregar metodo de dikstra
+                            System.out.println("dijkstra "+new Dijsktra().DijkstraPrincipal(nodoAux, nodo));
+                            nodoAux = null;
+                            mapa.getDestinos().stream().forEach((t) -> {
+                                t.setFill(Color.RED);
+                            });
+                            System.out.println("DIJKSTRA");
+                        }
+                        
+                        System.out.println("Numero Nodo " + nodo.getNumNodo());
+                        System.out.println("Nodos Adyacentes :" + nodo.getNodosAdyacentes().size());
+                        nodo.getNodosAdyacentes().forEach((x) -> {
+                            System.out.println("Nodo " + x.getNumNodo());
                         });
 
                         x1 = x2;
@@ -274,26 +284,42 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     private void llenarMatPeso() {
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
-                matPeso[i][j] = 0;
-            }
-        }
-
-        LinkedList<Nodo> nodos = mapa.getDestinos();
-        Nodo aux;
-        for (int k = 0; k < nodos.size(); k++) {
-            aux = nodos.get(k);
-            List<Arista> nodosAdyacentes = aux.getAristasAdyacentes();
-            for (int i = 0; i < nodosAdyacentes.size(); i++) {
-                Arista auxArista = nodosAdyacentes.get(i);
-                if (aux.getNumNodo() == auxArista.getOrigen().getNumNodo()) {
-                    matPeso[aux.getNumNodo()][auxArista.getDestino().getNumNodo()] = auxArista.getPeso();
-                } else {
-                    matPeso[aux.getNumNodo()][auxArista.getOrigen().getNumNodo()] = auxArista.getPeso();
+        StringBuilder sb = new StringBuilder();
+        //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
+        matPeso = new Integer [mapa.getDestinos().size()][mapa.getDestinos().size()];
+        
+        for (int i = 0; i < mapa.getDestinos().size(); i++) {
+            Nodo aux = mapa.getDestinos().get(i);//Ubicamos el nodo con el que vamos a comparar
+            for (int j = 0; j < mapa.getDestinos().size(); j++) {
+                if(i!=j){// Si no se esta ubicado en la diagonal
+                    Nodo aux2 = mapa.getDestinos().get(j);
+                    
+                    for(Arista arista : mapa.getAristas()){
+                        //Intentamos ubicar la arista que coincida con los nodos auxiliares para agregar el peso en la matriz
+                        if( ( arista.getDestino().equals(aux) && arista.getOrigen().equals(aux2) ) || ( arista.getDestino().equals(aux2) && arista.getOrigen().equals(aux))){
+                            matPeso[i][j] = arista.getPeso();
+                        }
+                    }
+                    //Si no se encontro la arista con los nodos auxiliares se llena la matriz con un peso 0
+                    if(matPeso[i][j] == null){
+                        matPeso[i][j] = 0;
+                    }
                 }
+                //Si es la diagonal se llena la matriz con peso 0
+                else{
+                    matPeso[i][j] = 0;
+                }
+                
+                sb.append(matPeso[i][j]);
+                sb.append("\t");
             }
+            
+            sb.append("\n");
         }
+        
+        //Imprime la matriz
+        System.out.println("Matriz: \n"+sb);
+        
     }
 
     private void ubicarArista(Double xx, Double yy) {

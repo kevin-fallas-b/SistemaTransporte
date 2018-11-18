@@ -9,6 +9,8 @@ import javafx.scene.shape.Circle;
 public class Nodo extends Circle {
    
     private final List <Arista> aristas_Adyacentes = new ArrayList<>();
+    private final List <Nodo> nodos_Adyacentes = new ArrayList<>();
+    
     private Point2D puntoMapa; 
     private Integer numNodo;
 
@@ -56,4 +58,7 @@ public class Nodo extends Circle {
         return aristas_Adyacentes;
     }
     
+    public List<Nodo> getNodosAdyacentes() {
+        return nodos_Adyacentes;
+    }
 }

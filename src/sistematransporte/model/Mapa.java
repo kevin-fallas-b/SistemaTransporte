@@ -22,7 +22,7 @@ import javafx.scene.paint.Color;
  */
 public class Mapa extends ImageView {
 
-    private final LinkedList <Nodo> destinos = new LinkedList();
+    public static final LinkedList <Nodo> destinos = new LinkedList();
     private final LinkedList <Arista> aristas = new LinkedList();
     public Mapa() {
         super();
