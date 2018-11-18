@@ -100,6 +100,7 @@ public class PantPrincipalController extends Controller implements Initializable
             apCentro.setOnMouseClicked(onClick);
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
+            llenarMatPeso();
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -176,7 +177,6 @@ public class PantPrincipalController extends Controller implements Initializable
                 imagen.setLayoutX(event.getSceneX() - 15);
                 imagen.setLayoutY(event.getSceneY() - 12);
                 apCentro.getChildren().add(imagen);
-                llenarMatPeso();
             }
         }
     };
