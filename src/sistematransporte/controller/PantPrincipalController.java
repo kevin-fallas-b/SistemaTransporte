@@ -194,9 +194,18 @@ public class PantPrincipalController extends Controller implements Initializable
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                         
                         nodo.setFill(Color.AQUA);
+                        
                         System.out.println("Click sobre nodo numero: "+nodo.getNumNodo()+" ,contiene " + nodo.getAristasAdyacentes().size()+ " aristas adyacentes" );
+                        
                         nodo.getAristasAdyacentes().stream().forEach((arista) -> {
-                            System.out.println("Destino nodo num "+arista.getDestino().getNumNodo()+" origen: "+arista.getOrigen().getNumNodo());
+                            if(arista.getDestino().equals(nodo)){
+                                System.out.println("Destino nodo num "+arista.getOrigen().getNumNodo()+" origen: "+arista.getDestino().getNumNodo());
+                            }
+                            else{
+                                System.out.println("Destino nodo num "+arista.getDestino().getNumNodo()+" origen: "+arista.getOrigen().getNumNodo());
+                            }
+                            
+                            
                             //System.out.println("Peso: "+ arista.getPeso());
                         });
                         
@@ -269,6 +278,7 @@ public class PantPrincipalController extends Controller implements Initializable
                 matPeso[i][j]=0;
             }
         }
+        
         LinkedList<Nodo> nodos = mapa.getDestinos();
         Nodo aux;
         for(int k=0;k<nodos.size();k++){
