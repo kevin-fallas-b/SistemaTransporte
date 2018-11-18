@@ -204,9 +204,6 @@ public class PantPrincipalController extends Controller implements Initializable
                             else{
                                 System.out.println("Destino nodo num "+arista.getDestino().getNumNodo()+" origen: "+arista.getOrigen().getNumNodo());
                             }
-                            
-                            
-                            //System.out.println("Peso: "+ arista.getPeso());
                         });
                         
                         x1 = x2;
@@ -286,7 +283,11 @@ public class PantPrincipalController extends Controller implements Initializable
             List <Arista> nodosAdyacentes = aux.getAristasAdyacentes();
             for(int i=0;i<nodosAdyacentes.size();i++){
                 Arista auxArista=nodosAdyacentes.get(i);
-                matPeso[aux.getNumNodo()][auxArista.getDestino().getNumNodo()]=auxArista.getPeso();
+                if(aux.getNumNodo()==auxArista.getOrigen().getNumNodo()){
+                    matPeso[aux.getNumNodo()][auxArista.getDestino().getNumNodo()]=auxArista.getPeso();
+                }else{
+                   matPeso[aux.getNumNodo()][auxArista.getOrigen().getNumNodo()]=auxArista.getPeso();
+                }
             }
         }
     }
