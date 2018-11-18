@@ -82,7 +82,8 @@ public class PantPrincipalController extends Controller implements Initializable
     private Mapa mapa = new Mapa();
     private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
     private Boolean agregarReparacion = false;//igual que arriba
-    private Integer matPeso[][]= new Integer[100][100];
+    private Integer matPeso[][] = new Integer[100][100];
+
     /**
      * Initializes the controller class.
      *
@@ -91,11 +92,11 @@ public class PantPrincipalController extends Controller implements Initializable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         try {
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
-            
+
             iniciarMapa();
             apCentro.setOnMouseClicked(onClick);
             apCentro.setOnMouseReleased(seleccionarDestino);
@@ -120,7 +121,7 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     private void iniciarMapa() throws IOException {
-        
+
         ivAreaDelimitada.setVisible(false);
         ivAreaDelimitada.setOnMouseReleased(seleccionarDestino);
         apCentro.getChildren().add(mapa);
@@ -137,32 +138,36 @@ public class PantPrincipalController extends Controller implements Initializable
     public void cargarNodos() {
         try {
             mapa.cargarNodo();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+
     public void cargarAristas() {
         try {
             mapa.cagarAristas();
-            
+
             mapa.getAristas().stream().forEach((arista) -> {
                 apCentro.getChildren().add(arista);
             });
-            
+
             mapa.getDestinos().stream().forEach((nodo) -> {
                 apCentro.getChildren().add(nodo);
             });
-            
+
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+    
     private EventHandler<MouseEvent> onClick = (MouseEvent event) -> {
+        System.out.println("Mouse X: "+event.getSceneX()+" Mouse Y: "+event.getSceneY());
         if (event.getSceneX() < 422) {
             if (agregarAccidente || agregarReparacion) {
+                ubicarArista(event.getSceneX(), event.getSceneY());
                 System.out.println("Agregando Detalles a carretera.");
                 ImageView imagen;
                 if (agregarAccidente) {
@@ -180,7 +185,7 @@ public class PantPrincipalController extends Controller implements Initializable
             }
         }
     };
-    
+
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -192,20 +197,19 @@ public class PantPrincipalController extends Controller implements Initializable
             while (x1 <= x2) {
                 for (Nodo nodo : mapa.getDestinos()) {
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
-                        
+
                         nodo.setFill(Color.AQUA);
-                        
-                        System.out.println("Click sobre nodo numero: "+nodo.getNumNodo()+" ,contiene " + nodo.getAristasAdyacentes().size()+ " aristas adyacentes" );
-                        
+
+                        System.out.println("Click sobre nodo numero: " + nodo.getNumNodo() + " ,contiene " + nodo.getAristasAdyacentes().size() + " aristas adyacentes");
+
                         nodo.getAristasAdyacentes().stream().forEach((arista) -> {
-                            if(arista.getDestino().equals(nodo)){
-                                System.out.println("Destino nodo num "+arista.getOrigen().getNumNodo()+" origen: "+arista.getDestino().getNumNodo());
-                            }
-                            else{
-                                System.out.println("Destino nodo num "+arista.getDestino().getNumNodo()+" origen: "+arista.getOrigen().getNumNodo());
+                            if (arista.getDestino().equals(nodo)) {
+                                System.out.println("Destino nodo num " + arista.getOrigen().getNumNodo() + " origen: " + arista.getDestino().getNumNodo());
+                            } else {
+                                System.out.println("Destino nodo num " + arista.getDestino().getNumNodo() + " origen: " + arista.getOrigen().getNumNodo());
                             }
                         });
-                        
+
                         x1 = x2;
                         y1 = y2;
                     }
@@ -227,13 +231,12 @@ public class PantPrincipalController extends Controller implements Initializable
         }*/
     }
 
-
     @FXML
-    private void presionarBtnCargarNodos(ActionEvent event){
+    private void presionarBtnCargarNodos(ActionEvent event) {
         mapa.getDestinos().stream().forEach((nodo) -> {
             nodo.setVisible(true);
         });
-        
+
         mapa.getAristas().stream().forEach((arista) -> {
             arista.setVisible(true);
         });
@@ -269,24 +272,43 @@ public class PantPrincipalController extends Controller implements Initializable
         agregarReparacion = true;
         agregarAccidente = false;
     }
-    private void llenarMatPeso(){
-        for(int i=0;i<100;i++){
-            for(int j=0;j<100;j++){
-                matPeso[i][j]=0;
+
+    private void llenarMatPeso() {
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                matPeso[i][j] = 0;
             }
         }
-        
+
         LinkedList<Nodo> nodos = mapa.getDestinos();
         Nodo aux;
-        for(int k=0;k<nodos.size();k++){
-            aux=nodos.get(k);
-            List <Arista> nodosAdyacentes = aux.getAristasAdyacentes();
-            for(int i=0;i<nodosAdyacentes.size();i++){
-                Arista auxArista=nodosAdyacentes.get(i);
-                if(aux.getNumNodo()==auxArista.getOrigen().getNumNodo()){
-                    matPeso[aux.getNumNodo()][auxArista.getDestino().getNumNodo()]=auxArista.getPeso();
-                }else{
-                   matPeso[aux.getNumNodo()][auxArista.getOrigen().getNumNodo()]=auxArista.getPeso();
+        for (int k = 0; k < nodos.size(); k++) {
+            aux = nodos.get(k);
+            List<Arista> nodosAdyacentes = aux.getAristasAdyacentes();
+            for (int i = 0; i < nodosAdyacentes.size(); i++) {
+                Arista auxArista = nodosAdyacentes.get(i);
+                if (aux.getNumNodo() == auxArista.getOrigen().getNumNodo()) {
+                    matPeso[aux.getNumNodo()][auxArista.getDestino().getNumNodo()] = auxArista.getPeso();
+                } else {
+                    matPeso[aux.getNumNodo()][auxArista.getOrigen().getNumNodo()] = auxArista.getPeso();
+                }
+            }
+        }
+    }
+
+    private void ubicarArista(Double xx, Double yy) {
+        Integer x= xx.intValue();
+        Integer y= yy.intValue();
+        for (Arista arista : mapa.getAristas()) {
+            if (arista.getStartY() >= arista.getEndY()) {
+                //esta caso es una arista que va de abajo hacia arriba
+                if ((x > arista.getStartX()-10 && x < arista.getEndX()+10) && (y < arista.getStartY() && y > arista.getEndY())) {
+                    System.out.println("Arista Encontrada origen: "+arista.getOrigen().getNumNodo()+" destino: "+arista.getDestino().getNumNodo());
+                }
+            } else if ((arista.getStartY() <= arista.getEndY())) {
+                //arista que va de arriba hacia abajo 
+                if ((x < arista.getStartX()+10 && x > arista.getEndX()-10) && (y > arista.getStartY() && y < arista.getEndY())) {
+                    System.out.println("Arista Encontrada origen: "+arista.getOrigen().getNumNodo()+" destino: "+arista.getDestino().getNumNodo());
                 }
             }
         }
