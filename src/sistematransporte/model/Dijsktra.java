@@ -5,7 +5,10 @@
  */
 package sistematransporte.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import javafx.scene.paint.Color;
 import static sistematransporte.controller.PantPrincipalController.matPeso;
 import static sistematransporte.model.Mapa.destinos;
 
@@ -13,7 +16,7 @@ import static sistematransporte.model.Mapa.destinos;
  *
  * @author Carlos Olivares
  */
-public class Dijsktra {
+/*public class Dijsktra {
 
     public Dijsktra() {
     }
@@ -166,4 +169,126 @@ public class Dijsktra {
     }
     
     
+}*/
+public class Dijsktra {
+
+    Mapa grafo;
+    ArrayList<Nodo> listaNodosAdyacentes;
+    ArrayList<Arista> aux = new ArrayList<Arista>();
+
+    public Dijsktra(Mapa grafo) {
+        this.grafo = grafo;
+        listaNodosAdyacentes = new ArrayList<>();
+    }
+
+    public Dijsktra() {
+        }
+public boolean isContenido(Nodo nodo){
+        boolean retornado = false;
+        for(Nodo n:listaNodosAdyacentes){
+            if(n == nodo){
+                retornado = true;
+            }
+        }
+        return retornado;
+    }
+    private void llenarConAdyacentes(Nodo nodo) {
+        if (nodo != null) {
+            List<Arista> listaAux = nodo.getAristasAdyacentes();
+            if (listaAux != null) {
+                for (Arista enlace : listaAux) {
+                    Nodo aux2;
+                    if (nodo.equals(enlace.getOrigen())) {
+                        aux2=enlace.getDestino();
+                    }
+                    else
+                    {
+                        aux2=enlace.getOrigen();
+                    }
+                    
+                    if (!aux2.isMarca()) {
+
+                        if (isContenido(aux2)) {
+                            //System.out.println("aux2 "+ aux2);
+                            int longitud = nodo.getLongitudCamino() + enlace.getPeso();
+                            if (aux2.getLongitudCamino() > longitud) {
+                                aux2.setLongitudCamino(longitud);
+                                aux2.setNodoAntecesorDisjktra(nodo);
+                            }
+                        } else {
+                            aux2.setLongitudCamino(nodo.getLongitudCamino() + enlace.getPeso());
+                            aux2.setNodoAntecesorDisjktra(nodo);
+                            listaNodosAdyacentes.add(aux2);
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+public Nodo buscarMenor(){
+        Nodo aux = new Nodo();
+        aux.setLongitudCamino(9999999);
+
+        for(Nodo nodo:listaNodosAdyacentes){
+            if(nodo.getLongitudCamino() < aux.getLongitudCamino()){
+                aux = nodo;                
+            }
+        }
+
+        return aux;
+    }
+    public void ejecutar(Nodo nodoInicio) {
+        nodoInicio.setLongitudCamino(0);
+        if (nodoInicio != null) {
+            listaNodosAdyacentes = new ArrayList <>();
+            listaNodosAdyacentes.add(nodoInicio);
+            while (!listaNodosAdyacentes.isEmpty()) {
+                Nodo menor = buscarMenor();
+                menor.setMarca(true);
+                listaNodosAdyacentes.remove(menor);
+                llenarConAdyacentes(menor);
+            }
+        }
+    }
+
+    private void rutaCorta(Nodo nodoFinal) {
+        aux.clear();
+        Nodo nAux = nodoFinal;
+        System.out.println("nAux "+nAux.getNodoAntecesorDisjktra());
+        while (nAux.getNodoAntecesorDisjktra() != null) {
+//        aux.add(grafo.getArista(nAux.getCapital().getNombreCiudad(),
+//                nAux.getNodoAntecesorDisjktra().getCapital().getNombreCiudad()));
+            aux.add(grafo.getArista(nAux,
+                    nAux.getNodoAntecesorDisjktra()));
+            nAux = nAux.getNodoAntecesorDisjktra();
+        }
+
+    }
+
+    public void marcarRutaCorta(Nodo nodoFinal, Color color) {
+        if (nodoFinal != null) {
+            rutaCorta(nodoFinal);
+           /* for (int i = 0; i < aux.size(); i++) {
+                if (!aux.isEmpty()) {
+                   /* aux.get(i).getLineaQuebrada().setColor(color);
+                    aux.get(i).getLineaQuebrada().setGrosorLinea(4);
+                   aux.get(i).setStroke(color);
+                   aux.get(i).setStrokeWidth(10);
+                }*/
+           if (aux.isEmpty()) {
+               System.out.println("estoy vacia");
+           }
+           aux.stream().forEach((t) -> {
+               if(t!=null){
+                t.setStroke(color);
+                t.setStrokeWidth(10);   
+               }
+               //System.out.println("t "+ t);
+              // t.getPeso();
+               //t.setFill(color);
+               //t.setStrokeWidth(10);
+           });
+            }
+        }
 }

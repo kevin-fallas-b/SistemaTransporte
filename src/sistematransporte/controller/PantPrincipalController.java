@@ -187,7 +187,7 @@ public class PantPrincipalController extends Controller implements Initializable
         }
     };
 
-   Nodo nodoAux = null;
+   static Nodo nodoAux = null;
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -206,20 +206,25 @@ public class PantPrincipalController extends Controller implements Initializable
                         }
                         else{
                             //Agregar metodo de dikstra
-                            System.out.println("dijkstra "+new Dijsktra().DijkstraPrincipal(nodoAux, nodo));
-                            nodoAux = null;
-                            mapa.getDestinos().stream().forEach((t) -> {
+                           // System.out.println("dijkstra "+new Dijsktra().DijkstraPrincipal(nodoAux, nodo));
+                           Dijsktra d = new Dijsktra(mapa);
+                           d.ejecutar(nodoAux);
+                           nodoAux = null;
+                           d.marcarRutaCorta(nodo, Color.ORANGE);
+                           
+                            /*mapa.getDestinos().stream().forEach((t) -> {
                                 t.setFill(Color.RED);
                             });
-                            System.out.println("DIJKSTRA");
+                            */
+                            //System.out.println("DIJKSTRA");
                         }
                         
-                        System.out.println("Numero Nodo " + nodo.getNumNodo());
+                       /* System.out.println("Numero Nodo " + nodo.getNumNodo());
                         System.out.println("Nodos Adyacentes :" + nodo.getNodosAdyacentes().size());
                         nodo.getNodosAdyacentes().forEach((x) -> {
                             System.out.println("Nodo " + x.getNumNodo());
                         });
-
+                        */
                         x1 = x2;
                         y1 = y2;
                     }
