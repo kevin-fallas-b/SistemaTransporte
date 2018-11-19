@@ -211,7 +211,11 @@ public class PantPrincipalController extends Controller implements Initializable
                            d.ejecutar(nodoAux);
                            nodoAux = null;
                            d.marcarRutaCorta(nodo, Color.ORANGE);
-                           
+                           mapa.getDestinos().stream().forEach((t) -> {
+                               t.setMarca(false);
+                               t.setLongitudCamino(0);
+                               t.setNodoAntecesorDisjktra(null);
+                           });
                             /*mapa.getDestinos().stream().forEach((t) -> {
                                 t.setFill(Color.RED);
                             });
