@@ -220,50 +220,38 @@ public class PantPrincipalController extends Controller implements Initializable
     };
 
     private void dibujar(Nodo nodoOr, Nodo nodoDestino) {
-        System.out.println("Nodo Destino: "+nodoDestino.getNumNodo());
         Vehiculo carro = new Vehiculo();
         carro.setLayoutX((nodoOr.getCenterX()) - ((carro.getFitWidth()) / 2));
         carro.setLayoutY((nodoOr.getCenterY()) - ((carro.getFitHeight()) / 2));
         apCentro.getChildren().add(carro);
-        Nodo nodIni = nodoOr;
-        while (nodIni != nodoDestino) {
-            Dijsktra d = new Dijsktra(mapa);
-            d.ejecutar(nodIni);
-            d.marcarRutaCorta(nodoDestino, Color.ORANGE);
-            Stack<Arista> ruta = new Stack<Arista>();
-            ArrayList<Arista> rutaAtrasAdelante = d.getAux();
-            while (!rutaAtrasAdelante.isEmpty()) {
-                ruta.push(rutaAtrasAdelante.get(0));
-                rutaAtrasAdelante.remove(0);
-            }
-            System.out.println("Nodo Ini: "+nodIni.getNumNodo()+ "Distancia"+ruta.size()+"   Ruta origen: "+ruta.peek().getOrigen().getNumNodo()+ "Ruta Destino: "+ruta.peek().getDestino().getNumNodo());
-            //trazarCarro(carro, ruta.peek().getOrigen());
-            //nodIni=ruta.peek().getOrigen();
-            //ruta.pop();
-            /*if(ruta.peek().getDestino().equals(nodIni)){
-                trazarCarro(carro, ruta.peek().getOrigen());
-            }
-            else{
-                trazarCarro(carro, ruta.peek().getDestino());
-            }*/
-            Arista arista = ruta.pop();
-            if (!arista.getDestino().equals(nodIni)) {
-                nodIni = arista.getDestino();
-                //trazarCarro(carro, nodIni);
-            } else {
-                System.out.println("ENO 2");
-                nodIni = arista.getOrigen();
-                //trazarCarro(carro, nodIni);
-            }
+        //dibujarRecursivo(nodoOr, nodoDestino, carro, 0);
+        pasarDeAristasANodos(nodoOr, nodoDestino);
 
+    }
+
+    private void pasarDeAristasANodos(Nodo ini, Nodo fin) {
+        Dijsktra d = new Dijsktra(mapa);
+        d.ejecutar(ini);
+        d.marcarRutaCorta(fin, Color.CORAL);
+        ArrayList<Arista> rutaConAristasAlrevez=d.getAux();
+        ArrayList<Nodo> ruta = new ArrayList();
+        ruta.add(ini);
+        int cont=0;
+        for(int i=rutaConAristasAlrevez.size()-1;i>=0;i--){
+            Arista arista= rutaConAristasAlrevez.get(i);
+            if(ruta.get(cont)==arista.getDestino()){
+                ruta.add(arista.getOrigen());
+            }else{
+                ruta.add(arista.getDestino());
+            }
+            cont++;
         }
-
-        nodoOrigen = null;
-        mapa.getDestinos().stream().forEach((t) -> {
-            t.setMarca(false);
-            t.setLongitudCamino(0);
-            t.setNodoAntecesorDisjktra(null);
-        });
+        
+        //imprimir para verificar
+        while(!ruta.isEmpty()){
+            System.out.println("Nodo num: "+ruta.get(0).getNumNodo());
+            ruta.remove(0);
+        }
     }
 
     private void trazarCarro(Vehiculo carro, Nodo destino) {
