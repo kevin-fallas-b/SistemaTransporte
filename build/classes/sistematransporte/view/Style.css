@@ -24,7 +24,7 @@ imagen del carro accidentado o de obstruccion en la vida tiene que ser de 30x25
     -fx-image: url("../resources/AreaDelimitada.png");
 }
 #vehiculo{
-    -fx-image: url(../resources/carro.png);
+    -fx-image: url(../resources/carro1.png);
 }
 .jfx-radio-button {
   

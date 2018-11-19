@@ -17,9 +17,9 @@ public class Vehiculo extends ImageView {
     public Vehiculo() {
         super();
         this.setId("vehiculo");
-        this.setFitHeight(54);
-        this.setFitWidth(54);
-        this.setRotate(90);
+        this.setFitHeight(50);
+        this.setFitWidth(35);
+        this.setRotate(180);
     }
     
 }

@@ -215,6 +215,11 @@ public class PantPrincipalController extends Controller implements Initializable
                            Vehiculo v = new Vehiculo();
                            v.setLayoutX((d.getAux().get(0).getStartX())-((v.getFitWidth())/2));
                            v.setLayoutY((d.getAux().get(0).getStartY())-((v.getFitHeight())/2));
+                            System.out.println("angulo "+(360-(d.getAux().get(0).getOrigen().getPuntoMapa().angle(d.getAux().get(0).getDestino().getPuntoMapa()))));
+                           v.setRotate(360-(d.getAux().get(0).getOrigen().getPuntoMapa().angle(d.getAux().get(0).getDestino().getPuntoMapa())));
+                           // System.out.println("pendiente "+(d.getAux().get(0).getEndY()-d.getAux().get(0).getStartY())/(d.getAux().get(0).getEndX()+d.getAux().get(0).getStartX()));
+                          // v.setRotate(((d.getAux().get(0).getEndY()-d.getAux().get(0).getStartY())/(d.getAux().get(0).getEndX()+d.getAux().get(0).getStartX())));
+                           
                            apCentro.getChildren().add(v);
                            mapa.getDestinos().stream().forEach((t) -> {
                                t.setMarca(false);
