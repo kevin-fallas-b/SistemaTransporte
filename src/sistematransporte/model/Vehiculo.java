@@ -5,11 +5,21 @@
  */
 package sistematransporte.model;
 
+import javafx.scene.image.ImageView;
+
 /**
  *
  * @author Kevin F
  */
-public class Vehiculo {
+public class Vehiculo extends ImageView {
     Integer tiempo;//tiempo que lleva en movimiento el vehiculo, guardado en segundos
+
+    public Vehiculo() {
+        super();
+        this.setId("vehiculo");
+        this.setFitHeight(54);
+        this.setFitWidth(54);
+        this.setRotate(90);
+    }
     
 }

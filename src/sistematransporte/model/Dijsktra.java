@@ -252,6 +252,10 @@ public Nodo buscarMenor(){
         }
     }
 
+    public ArrayList<Arista> getAux() {
+        return aux;
+    }
+
     private void rutaCorta(Nodo nodoFinal) {
         aux.clear();
         Nodo nAux = nodoFinal;

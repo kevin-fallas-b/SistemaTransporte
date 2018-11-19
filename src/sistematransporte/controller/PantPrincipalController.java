@@ -30,6 +30,7 @@ import sistematransporte.model.Arista;
 import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
+import sistematransporte.model.Vehiculo;
 
 /**
  * FXML Controller class
@@ -211,6 +212,10 @@ public class PantPrincipalController extends Controller implements Initializable
                            d.ejecutar(nodoAux);
                            nodoAux = null;
                            d.marcarRutaCorta(nodo, Color.ORANGE);
+                           Vehiculo v = new Vehiculo();
+                           v.setLayoutX((d.getAux().get(0).getStartX())-((v.getFitWidth())/2));
+                           v.setLayoutY((d.getAux().get(0).getStartY())-((v.getFitHeight())/2));
+                           apCentro.getChildren().add(v);
                            mapa.getDestinos().stream().forEach((t) -> {
                                t.setMarca(false);
                                t.setLongitudCamino(0);
@@ -327,7 +332,7 @@ public class PantPrincipalController extends Controller implements Initializable
         }
         
         //Imprime la matriz
-        System.out.println("Matriz: \n"+sb);
+       // System.out.println("Matriz: \n"+sb);
         
     }
 
