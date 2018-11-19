@@ -238,7 +238,7 @@ public Nodo buscarMenor(){
 
         return aux;
     }
-    public void ejecutar(Nodo nodoInicio) {
+    public ArrayList ejecutar(Nodo nodoInicio) {
         nodoInicio.setLongitudCamino(0);
         if (nodoInicio != null) {
             listaNodosAdyacentes = new ArrayList <>();
@@ -250,6 +250,7 @@ public Nodo buscarMenor(){
                 llenarConAdyacentes(menor);
             }
         }
+        return aux;
     }
 
     public ArrayList<Arista> getAux() {

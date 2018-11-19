@@ -10,11 +10,14 @@ import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,6 +29,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import sistematransporte.model.Arista;
 import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
@@ -85,6 +89,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
     private Boolean agregarReparacion = false;//igual que arriba
     public static Integer matPeso[][] = new Integer[100][100];
+    private ArrayList<Arista> ruta;
 
     /**
      * Initializes the controller class.
@@ -164,9 +169,9 @@ public class PantPrincipalController extends Controller implements Initializable
         }
 
     }
-    
+
     private EventHandler<MouseEvent> onClick = (MouseEvent event) -> {
-        System.out.println("Mouse X: "+event.getSceneX()+" Mouse Y: "+event.getSceneY());
+        System.out.println("Mouse X: " + event.getSceneX() + " Mouse Y: " + event.getSceneY());
         if (event.getSceneX() < 422) {
             if (agregarAccidente || agregarReparacion) {
                 ubicarArista(event.getSceneX(), event.getSceneY());
@@ -188,7 +193,7 @@ public class PantPrincipalController extends Controller implements Initializable
         }
     };
 
-   static Nodo nodoAux = null;
+    static Nodo nodoAux = null;
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
 
         Double y1 = event.getSceneY() - 10;
@@ -202,43 +207,44 @@ public class PantPrincipalController extends Controller implements Initializable
                     if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
 
                         nodo.setFill(Color.AQUA);
-                        if(nodoAux == null){
+                        if (nodoAux == null) {
                             nodoAux = nodo;
-                        }
-                        else{
+                        } else {
                             //Agregar metodo de dikstra
-                           // System.out.println("dijkstra "+new Dijsktra().DijkstraPrincipal(nodoAux, nodo));
-                           Dijsktra d = new Dijsktra(mapa);
-                           d.ejecutar(nodoAux);
-                           nodoAux = null;
-                           d.marcarRutaCorta(nodo, Color.ORANGE);
-                           Vehiculo v = new Vehiculo();
-                           v.setLayoutX((d.getAux().get(0).getStartX())-((v.getFitWidth())/2));
-                           v.setLayoutY((d.getAux().get(0).getStartY())-((v.getFitHeight())/2));
-                            System.out.println("angulo "+(360-(d.getAux().get(0).getOrigen().getPuntoMapa().angle(d.getAux().get(0).getDestino().getPuntoMapa()))));
-                           v.setRotate(360-(d.getAux().get(0).getOrigen().getPuntoMapa().angle(d.getAux().get(0).getDestino().getPuntoMapa())));
-                           // System.out.println("pendiente "+(d.getAux().get(0).getEndY()-d.getAux().get(0).getStartY())/(d.getAux().get(0).getEndX()+d.getAux().get(0).getStartX()));
-                          // v.setRotate(((d.getAux().get(0).getEndY()-d.getAux().get(0).getStartY())/(d.getAux().get(0).getEndX()+d.getAux().get(0).getStartX())));
-                           
-                           apCentro.getChildren().add(v);
-                           mapa.getDestinos().stream().forEach((t) -> {
-                               t.setMarca(false);
-                               t.setLongitudCamino(0);
-                               t.setNodoAntecesorDisjktra(null);
-                           });
+                            // System.out.println("dijkstra "+new Dijsktra().DijkstraPrincipal(nodoAux, nodo));
+                            Dijsktra d = new Dijsktra(mapa);
+                            //ruta = d.ejecutar(nodoAux);
+                            d.ejecutar(nodoAux);
+                            nodoAux = null;
+                            d.marcarRutaCorta(nodo, Color.ORANGE);
+                            trazarCarro(d.getAux());
+                            //Vehiculo v = new Vehiculo();
+                            //v.setLayoutX((d.getAux().get(0).getStartX())-((v.getFitWidth())/2));
+                            //v.setLayoutY((d.getAux().get(0).getStartY())-((v.getFitHeight())/2));
+                            //System.out.println("angulo "+(360-(d.getAux().get(0).getOrigen().getPuntoMapa().angle(d.getAux().get(0).getDestino().getPuntoMapa()))));
+                            //v.setRotate(360-(d.getAux().get(0).getOrigen().getPuntoMapa().angle(d.getAux().get(0).getDestino().getPuntoMapa())));
+                            // System.out.println("pendiente "+(d.getAux().get(0).getEndY()-d.getAux().get(0).getStartY())/(d.getAux().get(0).getEndX()+d.getAux().get(0).getStartX()));
+                            // v.setRotate(((d.getAux().get(0).getEndY()-d.getAux().get(0).getStartY())/(d.getAux().get(0).getEndX()+d.getAux().get(0).getStartX())));
+
+                            //apCentro.getChildren().add(v);
+                            mapa.getDestinos().stream().forEach((t) -> {
+                                t.setMarca(false);
+                                t.setLongitudCamino(0);
+                                t.setNodoAntecesorDisjktra(null);
+                            });
                             /*mapa.getDestinos().stream().forEach((t) -> {
                                 t.setFill(Color.RED);
                             });
-                            */
+                             */
                             //System.out.println("DIJKSTRA");
                         }
-                        
-                       /* System.out.println("Numero Nodo " + nodo.getNumNodo());
+
+                        /* System.out.println("Numero Nodo " + nodo.getNumNodo());
                         System.out.println("Nodos Adyacentes :" + nodo.getNodosAdyacentes().size());
                         nodo.getNodosAdyacentes().forEach((x) -> {
                             System.out.println("Nodo " + x.getNumNodo());
                         });
-                        */
+                         */
                         x1 = x2;
                         y1 = y2;
                     }
@@ -248,6 +254,32 @@ public class PantPrincipalController extends Controller implements Initializable
             y1++;
         }
     };
+
+    private void trazarCarro(ArrayList<Arista> rutaAtrasAdelante) {
+        Vehiculo carro = new Vehiculo();
+        Stack<Arista> ruta = new Stack<Arista>();
+        while (!rutaAtrasAdelante.isEmpty()) {
+            ruta.push(rutaAtrasAdelante.get(0));
+            rutaAtrasAdelante.remove(0);
+        }
+        Arista origen = ruta.peek();
+        Arista destino;
+        carro.setLayoutX((origen.getEndX()) - ((carro.getFitWidth()) / 2));
+        carro.setLayoutY((origen.getEndY()) - ((carro.getFitHeight()) / 2));
+        apCentro.getChildren().add(carro); 
+        Timeline timeline = new Timeline();
+        int cont=1500;
+        while (!ruta.isEmpty()) {
+            destino = ruta.pop();
+            KeyValue kv = new KeyValue(carro.layoutXProperty(), (destino.getStartX() - ((carro.getFitWidth()) / 2)));
+            KeyValue kvy = new KeyValue(carro.layoutYProperty(), (destino.getStartY() - ((carro.getFitHeight()) / 2)));
+            KeyFrame kf = new KeyFrame(Duration.millis(cont), kv);
+            KeyFrame kfy = new KeyFrame(Duration.millis(cont), kvy);
+            timeline.getKeyFrames().addAll(kf, kfy);
+            cont+=1500;            
+        }
+        timeline.play();
+    }
 
     @FXML
     private void presionarBtnGuardarDestinos(ActionEvent event) {
@@ -305,55 +337,53 @@ public class PantPrincipalController extends Controller implements Initializable
     private void llenarMatPeso() {
         StringBuilder sb = new StringBuilder();
         //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
-        matPeso = new Integer [mapa.getDestinos().size()][mapa.getDestinos().size()];
-        
+        matPeso = new Integer[mapa.getDestinos().size()][mapa.getDestinos().size()];
+
         for (int i = 0; i < mapa.getDestinos().size(); i++) {
             Nodo aux = mapa.getDestinos().get(i);//Ubicamos el nodo con el que vamos a comparar
             for (int j = 0; j < mapa.getDestinos().size(); j++) {
-                if(i!=j){// Si no se esta ubicado en la diagonal
+                if (i != j) {// Si no se esta ubicado en la diagonal
                     Nodo aux2 = mapa.getDestinos().get(j);
-                    
-                    for(Arista arista : mapa.getAristas()){
+
+                    for (Arista arista : mapa.getAristas()) {
                         //Intentamos ubicar la arista que coincida con los nodos auxiliares para agregar el peso en la matriz
-                        if( ( arista.getDestino().equals(aux) && arista.getOrigen().equals(aux2) ) || ( arista.getDestino().equals(aux2) && arista.getOrigen().equals(aux))){
+                        if ((arista.getDestino().equals(aux) && arista.getOrigen().equals(aux2)) || (arista.getDestino().equals(aux2) && arista.getOrigen().equals(aux))) {
                             matPeso[i][j] = arista.getPeso();
                         }
                     }
                     //Si no se encontro la arista con los nodos auxiliares se llena la matriz con un peso 0
-                    if(matPeso[i][j] == null){
+                    if (matPeso[i][j] == null) {
                         matPeso[i][j] = 0;
                     }
-                }
-                //Si es la diagonal se llena la matriz con peso 0
-                else{
+                } //Si es la diagonal se llena la matriz con peso 0
+                else {
                     matPeso[i][j] = 0;
                 }
-                
+
                 sb.append(matPeso[i][j]);
                 sb.append("\t");
             }
-            
+
             sb.append("\n");
         }
-        
+
         //Imprime la matriz
-       // System.out.println("Matriz: \n"+sb);
-        
+        // System.out.println("Matriz: \n"+sb);
     }
 
     private void ubicarArista(Double xx, Double yy) {
-        Integer x= xx.intValue();
-        Integer y= yy.intValue();
+        Integer x = xx.intValue();
+        Integer y = yy.intValue();
         for (Arista arista : mapa.getAristas()) {
             if (arista.getStartY() >= arista.getEndY()) {
                 //esta caso es una arista que va de abajo hacia arriba
-                if ((x > arista.getStartX()-10 && x < arista.getEndX()+10) && (y < arista.getStartY() && y > arista.getEndY())) {
-                    System.out.println("Arista Encontrada origen: "+arista.getOrigen().getNumNodo()+" destino: "+arista.getDestino().getNumNodo());
+                if ((x > arista.getStartX() - 10 && x < arista.getEndX() + 10) && (y < arista.getStartY() && y > arista.getEndY())) {
+                    System.out.println("Arista Encontrada origen: " + arista.getOrigen().getNumNodo() + " destino: " + arista.getDestino().getNumNodo());
                 }
             } else if ((arista.getStartY() <= arista.getEndY())) {
                 //arista que va de arriba hacia abajo 
-                if ((x < arista.getStartX()+10 && x > arista.getEndX()-10) && (y > arista.getStartY() && y < arista.getEndY())) {
-                    System.out.println("Arista Encontrada origen: "+arista.getOrigen().getNumNodo()+" destino: "+arista.getDestino().getNumNodo());
+                if ((x < arista.getStartX() + 10 && x > arista.getEndX() - 10) && (y > arista.getStartY() && y < arista.getEndY())) {
+                    System.out.println("Arista Encontrada origen: " + arista.getOrigen().getNumNodo() + " destino: " + arista.getDestino().getNumNodo());
                 }
             }
         }
