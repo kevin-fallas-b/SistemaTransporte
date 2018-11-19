@@ -89,7 +89,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
     private Boolean agregarReparacion = false;//igual que arriba
     public static Integer matPeso[][] = new Integer[100][100];
-    private ArrayList<Arista> ruta;
+    private ArrayList<Nodo> ruta = new ArrayList();
 
     /**
      * Initializes the controller class.
@@ -207,7 +207,13 @@ public class PantPrincipalController extends Controller implements Initializable
                         if (nodoOrigen == null) {
                             nodoOrigen = nodo;
                         } else {
-                            dibujar(nodoOrigen, nodo);
+                            GenerarRuta(nodoOrigen, nodo);
+                            nodoOrigen = null;
+                            mapa.getDestinos().stream().forEach((t) -> {
+                                t.setMarca(false);
+                                t.setLongitudCamino(0);
+                                t.setNodoAntecesorDisjktra(null);
+                            });
                         }
                         x1 = x2;
                         y1 = y2;
@@ -218,49 +224,41 @@ public class PantPrincipalController extends Controller implements Initializable
             y1++;
         }
     };
+    
 
-    private void dibujar(Nodo nodoOr, Nodo nodoDestino) {
-        Vehiculo carro = new Vehiculo();
-        carro.setLayoutX((nodoOr.getCenterX()) - ((carro.getFitWidth()) / 2));
-        carro.setLayoutY((nodoOr.getCenterY()) - ((carro.getFitHeight()) / 2));
-        apCentro.getChildren().add(carro);
-        //dibujarRecursivo(nodoOr, nodoDestino, carro, 0);
-        pasarDeAristasANodos(nodoOr, nodoDestino);
-
-    }
-
-    private void pasarDeAristasANodos(Nodo ini, Nodo fin) {
+    private void GenerarRuta(Nodo ini, Nodo fin) {
+        ruta.clear();
         Dijsktra d = new Dijsktra(mapa);
         d.ejecutar(ini);
         d.marcarRutaCorta(fin, Color.CORAL);
-        ArrayList<Arista> rutaConAristasAlrevez=d.getAux();
-        ArrayList<Nodo> ruta = new ArrayList();
+        ArrayList<Arista> rutaConAristasAlrevez = d.getAux();
         ruta.add(ini);
-        int cont=0;
-        for(int i=rutaConAristasAlrevez.size()-1;i>=0;i--){
-            Arista arista= rutaConAristasAlrevez.get(i);
-            if(ruta.get(cont)==arista.getDestino()){
+        int cont = 0;
+        for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
+            Arista arista = rutaConAristasAlrevez.get(i);
+            if (ruta.get(cont) == arista.getDestino()) {
                 ruta.add(arista.getOrigen());
-            }else{
+            } else {
                 ruta.add(arista.getDestino());
             }
             cont++;
         }
-        
-        //imprimir para verificar
-        while(!ruta.isEmpty()){
-            System.out.println("Nodo num: "+ruta.get(0).getNumNodo());
-            ruta.remove(0);
-        }
+        trazarCarro();
     }
 
-    private void trazarCarro(Vehiculo carro, Nodo destino) {
+    private void trazarCarro() {
+        Vehiculo carro = new Vehiculo();
+        carro.setLayoutX((ruta.get(0).getCenterX()) - ((carro.getFitWidth()) / 2));
+        carro.setLayoutY((ruta.get(0).getCenterY()) - ((carro.getFitHeight()) / 2));
+        apCentro.getChildren().add(carro);
         Timeline timeline = new Timeline();
-        KeyValue kv = new KeyValue(carro.layoutXProperty(), (destino.getCenterX() - ((carro.getFitWidth()) / 2)));
-        KeyValue kvy = new KeyValue(carro.layoutYProperty(), (destino.getCenterY() - ((carro.getFitHeight()) / 2)));
-        KeyFrame kf = new KeyFrame(Duration.millis(1500), kv);
-        KeyFrame kfy = new KeyFrame(Duration.millis(1500), kvy);
-        timeline.getKeyFrames().addAll(kf, kfy);
+        for (int i = 0; i < ruta.size(); i++) {
+            KeyValue kv = new KeyValue(carro.layoutXProperty(), (ruta.get(i).getCenterX() - ((carro.getFitWidth()) / 2)));
+            KeyValue kvy = new KeyValue(carro.layoutYProperty(), (ruta.get(i).getCenterY() - ((carro.getFitHeight()) / 2)));
+            KeyFrame kf = new KeyFrame(Duration.millis(1500*i), kv);
+            KeyFrame kfy = new KeyFrame(Duration.millis(1500*i), kvy);
+            timeline.getKeyFrames().addAll(kf, kfy);
+        }
         timeline.play();
     }
 
