@@ -50,7 +50,7 @@ public class Dijsktra {
                         aux2 = enlace.getOrigen();
                     }
 
-                    if (!aux2.isMarca()&&!enlace.getAccidente()) {
+                    if (!aux2.isMarca()&&!enlace.getAccidente()&&!enlace.getReparacion()) {
 
                         if (isContenido(aux2)) {
                             int longitud = nodo.getLongitudCamino() + enlace.getPeso();

@@ -10,10 +10,12 @@ import java.util.Stack;
 
 public class Floyd {
 
+
     public Floyd() {
     }
     
     public int [] floyd_cam(Integer[][] mady,int ini, int fin){
+
     //RutaCorta ruta;
     int aux;
     Integer mCaminos[][] = new Integer[mady.length][mady.length];
@@ -78,7 +80,7 @@ public int[] recorrido(Integer[][] mPesos, Integer [][] mRecorrido, int ini, int
             nodos[cont]=pila.pop();
 			cont++;
         }
-         
+
     return nodos;
 }
     
