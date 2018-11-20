@@ -106,8 +106,9 @@ public class PantPrincipalController extends Controller implements Initializable
     Boolean enEjecucion = false;
     @FXML
     private Label lbTiempoMin;
-    public static ArrayList<Arista> accidentes = new ArrayList();
-    public static ArrayList<Accidente> imagenesAccidentes = new ArrayList();
+    public static ArrayList <Arista> accidentes = new ArrayList();
+    public static ArrayList <Accidente> imagenesAccidentes = new ArrayList();
+    public static ArrayList <Arista> auxAristas;    
     public static Boolean timerEnEjecucion = false;
 
 
@@ -274,7 +275,7 @@ public class PantPrincipalController extends Controller implements Initializable
         d.marcarRutaCorta(fin, Color.BLACK);
         int conTemp = 0;
         rutaConAristasAlrevez = d.getAux();
-
+        
         if (ini.equals(nodoOrigen)) {
              tiempo();
             for (Arista t : d.getAux()) {
@@ -355,6 +356,7 @@ public class PantPrincipalController extends Controller implements Initializable
                     GenerarRuta(ruta.get(i + 1), fin, carro);
 
                 } else {
+                    rTrafico = null;
                     contDistanciaR = 0;
                     mapa.getDestinos().stream().forEach((t) -> {
                         t.setFill(Color.CORAL);
@@ -363,7 +365,7 @@ public class PantPrincipalController extends Controller implements Initializable
                     timerEnEjecucion=false;
                     calcularTarifa();
                     enEjecucion=false;
-                    
+                    rbTraficoBajo.setSelected(true);
                     if(!accidentes.isEmpty()){
                         accidentes.clear();
                         while(!imagenesAccidentes.isEmpty()){
@@ -371,10 +373,12 @@ public class PantPrincipalController extends Controller implements Initializable
                             imagenesAccidentes.remove(0);
                         }
                     }
+                    multiplicar = 1;
                     //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
                         t.setAccidente(false);
                         t.setStroke(Color.TRANSPARENT);
+                        t.setStrokeWidth(3);
                     });
                     apCentro.getChildren().remove(carro);
                     //System.out.println(timeline.getTotalDuration());
@@ -403,11 +407,16 @@ public class PantPrincipalController extends Controller implements Initializable
                 rutaConAristasAlrevez.stream().forEach((t) -> {
                     Integer peso = t.getPeso();
                     peso = peso * multiplicar;
-                    //peso = peso + peso * multiplicar;
-                    System.out.println("PESO OR: " + t.getPeso() + " PESO Corregido " + peso);
                     t.setPeso(peso);
                 });
+                rutaConAristasAlrevez.remove(rutaConAristasAlrevez.size()-1);
+                rutaConAristasAlrevez.stream().forEach((t) -> {
+                   t.setStroke(Color.YELLOW);
+                   t.setStrokeWidth(3);
+                });
+                
             }
+            
         } else {
             JFXRadioButton radio = rTrafico;
             int numero = multiplicar;
@@ -432,11 +441,16 @@ public class PantPrincipalController extends Controller implements Initializable
                     }
 
                     //peso = peso + peso * multiplicar;
-                    System.out.println("PESO OR: " + t.getPeso() + " PESO Corregido " + peso);
+                    //System.out.println("PESO OR: " + t.getPeso() + " PESO Corregido " + peso);
                     t.setPeso(peso);
                 });
                 rbTraficoBajo.setSelected(true);
                 modificarTiempo();
+                rutaConAristasAlrevez.remove(rutaConAristasAlrevez.size()-1);
+                rutaConAristasAlrevez.stream().forEach((t) -> {
+                   t.setStroke(Color.YELLOW);
+                   t.setStrokeWidth(3);
+                });
             }
 
         }
