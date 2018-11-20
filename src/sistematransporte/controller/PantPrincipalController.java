@@ -32,6 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import sistematransporte.model.Accidente;
 import sistematransporte.model.Arista;
 import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
@@ -90,8 +91,10 @@ public class PantPrincipalController extends Controller implements Initializable
     private final Mensaje mensaje = new Mensaje();
     public static Integer matPeso[][];
     private ArrayList<Nodo> ruta = new ArrayList();
+    private ArrayList<Arista> rutaConAristasAlrevez = new ArrayList<>();
     public static boolean animacionTermin = true;
     public static AnchorPane anchorPane;
+    private JFXRadioButton rTrafico = null;
     @FXML
     private Label lbCostoFinal;
     @FXML
@@ -103,6 +106,9 @@ public class PantPrincipalController extends Controller implements Initializable
     Boolean enEjecucion = false;
     @FXML
     private Label lbTiempoMin;
+    public static ArrayList<Arista> accidentes = new ArrayList();
+    public static ArrayList<Accidente> imagenesAccidentes = new ArrayList();
+
 
     /**
      * Initializes the controller class.
@@ -147,6 +153,7 @@ public class PantPrincipalController extends Controller implements Initializable
         apCentro.getChildren().add(ivAreaDelimitada);
         cargarNodos();
         cargarAristas();
+
     }
 
     public void cargarNodos() {
@@ -180,7 +187,7 @@ public class PantPrincipalController extends Controller implements Initializable
     static Nodo nodoOrigen = null;
 
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
-        if (!agregarAccidente && !agregarReparacion&&!enEjecucion) {
+        if (!agregarAccidente && !agregarReparacion && !enEjecucion) {
             //metodo que se encarga de selecionar destinos y llamar
             Double y1 = event.getSceneY() - 10;
             Double y2 = event.getSceneY() + 10;
@@ -192,7 +199,7 @@ public class PantPrincipalController extends Controller implements Initializable
                     for (Nodo nodo : mapa.getDestinos()) {
                         if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
                             nodo.setFill(Color.AQUA);
-                            if (nodoOrigen == null&&!enEjecucion) {
+                            if (nodoOrigen == null && !enEjecucion) {
                                 nodoOrigen = nodo;
                                 lbTiempoMin.setText("0");
                                 lbTiempo.setText("");
@@ -204,7 +211,7 @@ public class PantPrincipalController extends Controller implements Initializable
                                     animacionTermin = true;
                                     GenerarRuta(nodoOrigen, nodo, new Vehiculo());
                                     nodoOrigen = null;
-                                    enEjecucion=true;
+                                    enEjecucion = true;
                                 }
                             }
                             x1 = x2;
@@ -259,11 +266,12 @@ public class PantPrincipalController extends Controller implements Initializable
     }
     private void GenerarRuta(Nodo ini, Nodo fin, Vehiculo carro) {
         ruta.clear();
+        rutaConAristasAlrevez.clear();
         Dijsktra d = new Dijsktra(mapa);
         d.ejecutar(ini);
         d.marcarRutaCorta(fin, Color.BLACK);
         int conTemp = 0;
-        ArrayList<Arista> rutaConAristasAlrevez = d.getAux();
+        rutaConAristasAlrevez = d.getAux();
 
         if (ini.equals(nodoOrigen)) {
              tiempo();
@@ -273,12 +281,6 @@ public class PantPrincipalController extends Controller implements Initializable
             lbRecorridoEstimado.setText("" + conTemp);
         }
         ruta.add(ini);
-        //Aumenta el peso a la arista para recalcular la ruta 
-        /*if (!ini.equals(nodoOrigen)) {
-            if (!d.getAux().isEmpty()) {
-                d.getAux().get(0).setPeso(d.getAux().get(0).getPeso() + 100);
-            }
-        }*/
         int cont = 0;
 
         for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
@@ -307,6 +309,7 @@ public class PantPrincipalController extends Controller implements Initializable
         } else {
             tTrafico = 4500;
         }
+
     }
 
     private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro, Arista a) {
@@ -342,11 +345,13 @@ public class PantPrincipalController extends Controller implements Initializable
                 //Genera la ruta hasta que llegue al destino
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
                     carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY()) + 270);
+                    //Aumenta el peso de la arista
 
                     contDistanciaR += a.getPeso();
                     lbRecorridoFinal.setText("" + contDistanciaR);
-
+                    modificarTrafico();
                     GenerarRuta(ruta.get(i + 1), fin, carro);
+
                 } else {
                     contDistanciaR = 0;
                     mapa.getDestinos().stream().forEach((t) -> {
@@ -355,9 +360,17 @@ public class PantPrincipalController extends Controller implements Initializable
                     timer.cancel();
                     calcularTarifa();
                     enEjecucion=false;
+                    
+                    if(!accidentes.isEmpty()){
+                        accidentes.clear();
+                        while(!imagenesAccidentes.isEmpty()){
+                            apCentro.getChildren().remove(imagenesAccidentes.get(0));
+                            imagenesAccidentes.remove(0);
+                        }
+                    }
                     //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
-
+                        t.setAccidente(false);
                         t.setStroke(Color.TRANSPARENT);
                     });
                     apCentro.getChildren().remove(carro);
@@ -365,6 +378,66 @@ public class PantPrincipalController extends Controller implements Initializable
                 }
             });
         });
+    }
+
+    private int multiplicar = 1;
+
+    public void modificarTrafico() {
+        if (rTrafico == null) {
+            rTrafico = rbTraficoBajo;
+            if (rbTraficoBajo.isSelected()) {
+                multiplicar = 1;
+                rTrafico = rbTraficoBajo;
+            } else if (rbTraficoMedio.isSelected()) {
+                multiplicar = 2;
+                rTrafico = rbTraficoMedio;
+            } else if (rbTraficoAlto.isSelected()) {
+                multiplicar = 3;
+                rTrafico = rbTraficoAlto;
+            }
+
+            if (multiplicar != 1) {
+                rutaConAristasAlrevez.stream().forEach((t) -> {
+                    Integer peso = t.getPeso();
+                    peso = peso * multiplicar;
+                    //peso = peso + peso * multiplicar;
+                    System.out.println("PESO OR: " + t.getPeso() + " PESO Corregido " + peso);
+                    t.setPeso(peso);
+                });
+            }
+        } else {
+            JFXRadioButton radio = rTrafico;
+            int numero = multiplicar;
+            if (rbTraficoBajo.isSelected()) {
+                multiplicar = 1;
+                rTrafico = rbTraficoBajo;
+            } else if (rbTraficoMedio.isSelected()) {
+                multiplicar = 2;
+                rTrafico = rbTraficoMedio;
+            } else if (rbTraficoAlto.isSelected()) {
+                multiplicar = 3;
+                rTrafico = rbTraficoAlto;
+            }
+
+            if (!rTrafico.equals(radio)) {
+                rutaConAristasAlrevez.stream().forEach((t) -> {
+                    Integer peso = t.getPeso();
+                    if (numero > multiplicar) {
+                        peso = peso / multiplicar;
+                    } else {
+                        peso = peso * multiplicar;
+                    }
+
+                    //peso = peso + peso * multiplicar;
+                    System.out.println("PESO OR: " + t.getPeso() + " PESO Corregido " + peso);
+                    t.setPeso(peso);
+                });
+                rbTraficoBajo.setSelected(true);
+                modificarTiempo();
+            }
+
+        }
+
     }
 
     @FXML
@@ -438,7 +511,5 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             sb.append("\n");
         }
-        //Imprime la matriz
-        // System.out.println("Matriz: \n"+sb);
     }
 }

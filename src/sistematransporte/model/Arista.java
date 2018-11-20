@@ -11,7 +11,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import sistematransporte.controller.PantPrincipalController;
 import static sistematransporte.controller.PantPrincipalController.agregarAccidente;
+import static sistematransporte.controller.PantPrincipalController.agregarReparacion;
 import static sistematransporte.controller.PantPrincipalController.anchorPane;
 
 /**
@@ -19,11 +21,29 @@ import static sistematransporte.controller.PantPrincipalController.anchorPane;
  * @author Kevin F
  */
 public class Arista extends Line {
-
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
+    private Boolean accidente;
 
+    public Boolean getAccidente() {
+        return accidente;
+    }
+
+    public void setAccidente(Boolean accidente) {
+        this.accidente = accidente;
+    }
+
+    public EventHandler<MouseEvent> getClick() {
+        return click;
+    }
+
+    public void setClick(EventHandler<MouseEvent> click) {
+        this.click = click;
+    }
+    
+
+    private CierreCosevi cierre; 
     public Nodo getOrigen() {
         return origen;
     }
@@ -37,12 +57,14 @@ public class Arista extends Line {
         this.setStrokeWidth(10.00);
         this.setStroke(Color.TRANSPARENT);
         this.setOnMouseClicked(click);
-
+        this.accidente=false;
     }
 
     public void setOrigen(Nodo origen) {
         this.origen = origen;
     }
+
+    
 
     public Nodo getDestino() {
         return destino;
@@ -91,7 +113,6 @@ public class Arista extends Line {
     }
 
     EventHandler<MouseEvent> click = (MouseEvent event) -> {
-        System.out.println("CD");
         if (agregarAccidente) {
             Accidente accidente = new Accidente();
 
@@ -102,8 +123,21 @@ public class Arista extends Line {
 
             anchorPane.getChildren().add(accidente);
             agregarAccidente = false;
+            PantPrincipalController.accidentes.add(this);
+            PantPrincipalController.imagenesAccidentes.add(accidente);
+            this.accidente=true;
+           
         }
+        else if(agregarReparacion){
+            cierre = new CierreCosevi();
 
+            Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
+
+            cierre.setLayoutX(pMedio.getX() - cierre.getFitHeight() / 2);
+            cierre.setLayoutY(pMedio.getY() - cierre.getFitWidth() / 2);
+
+            anchorPane.getChildren().add(cierre);
+            agregarReparacion = false;
+        }
     };
-
 }

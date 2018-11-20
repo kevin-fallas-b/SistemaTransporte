@@ -17,8 +17,8 @@ public class CierreCosevi extends ImageView{
     public CierreCosevi() {
         super();
         this.setId("cierre");
-        this.setFitHeight(10);
-        this.setFitWidth(10);
+        this.setFitHeight(25);
+        this.setFitWidth(25);
     }
     
 }
