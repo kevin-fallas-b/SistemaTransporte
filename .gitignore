@@ -8,3 +8,7 @@
 *.class
 dist/SistemaTransporte.jar
 dist/SistemaTransporte.jar
+build/built-jar.properties
+dist/SistemaTransporte.html
+dist/SistemaTransporte.jar
+dist/web-files/dtjava.js

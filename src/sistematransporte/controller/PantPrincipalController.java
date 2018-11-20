@@ -23,6 +23,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -75,10 +76,6 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private JFXRadioButton rbTraficoMedio;
     @FXML
-    private JFXToggleButton tgMostrarNodos;
-    @FXML
-    private JFXButton btnGuardarDesitnos;
-    @FXML
     private JFXButton btnCargarNodos;
     @FXML
     private JFXToggleButton tbOpcionesDesarrollador;
@@ -94,6 +91,16 @@ public class PantPrincipalController extends Controller implements Initializable
     private ArrayList<Nodo> ruta = new ArrayList();
     public static boolean animacionTermin = true;
     public static AnchorPane anchorPane;
+    @FXML
+    private Label lbCostoInicial;
+    @FXML
+    private Label lbCostoFinal;
+    @FXML
+    private Label lbRecorridoEstimado;
+    @FXML
+    private Label lbRecorridoFinal;
+    @FXML
+    private Label lbTiempo;
     
     /**
      * Initializes the controller class.
@@ -140,10 +147,6 @@ public class PantPrincipalController extends Controller implements Initializable
         cargarAristas();
     }
 
-    @FXML
-    private void presionarToggleMostrar(ActionEvent event) {
-        //sistematransporte.SistemaTransporte.mostrarNodos = tgMostrarNodos.selectedProperty().getValue();
-    }
 
     public void cargarNodos() {
         try {
@@ -283,16 +286,6 @@ public class PantPrincipalController extends Controller implements Initializable
         });
     }
 
-    @FXML
-    private void presionarBtnGuardarDestinos(ActionEvent event) {
-        /*try {
-            mapa.guardarDestinosAArchivo();
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-    }
 
     @FXML
     private void presionarBtnCargarNodos(ActionEvent event) {
