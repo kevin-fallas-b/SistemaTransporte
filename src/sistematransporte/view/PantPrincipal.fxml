@@ -48,15 +48,13 @@
          </children>
       </AnchorPane>
       <JFXToggleButton fx:id="tbMostrarArea" layoutX="832.0" layoutY="65.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#presionarToggleArea" prefHeight="58.0" prefWidth="206.0" text="Mostrar Area Delimitada" />
-      <Label layoutX="499.0" layoutY="341.0" text="Costo incial:" />
-      <Label layoutX="499.0" layoutY="380.0" text="Costo final:" />
-      <Label fx:id="lbCostoInicial" layoutX="603.0" layoutY="341.0" prefHeight="17.0" prefWidth="60.0" />
+      <Label layoutX="499.0" layoutY="380.0" text="Costo del viaje:" />
       <Label fx:id="lbCostoFinal" layoutX="603.0" layoutY="380.0" prefHeight="17.0" prefWidth="61.0" />
-      <Label layoutX="704.0" layoutY="343.0" text="Recorrido estimado:" />
-      <Label layoutX="704.0" layoutY="382.0" text="Recorrido final:" />
+      <Label layoutX="704.0" layoutY="343.0" text="Distancia estimada::" />
+      <Label layoutX="704.0" layoutY="382.0" text="Distancia recorrida:" />
       <Label fx:id="lbRecorridoEstimado" layoutX="856.0" layoutY="343.0" prefHeight="17.0" prefWidth="61.0" />
       <Label fx:id="lbRecorridoFinal" layoutX="856.0" layoutY="382.0" prefHeight="17.0" prefWidth="61.0" />
-      <Label layoutX="605.0" layoutY="415.0" text="Tiempo en minutos:" />
-      <Label fx:id="lbTiempo" layoutX="739.0" layoutY="415.0" prefHeight="17.0" prefWidth="48.0" />
+      <Label layoutX="498.0" layoutY="342.0" text="Tiempo en minutos:" />
+      <Label fx:id="lbTiempo" layoutX="632.0" layoutY="342.0" prefHeight="17.0" prefWidth="48.0" />
    </children>
 </AnchorPane>

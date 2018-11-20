@@ -92,8 +92,6 @@ public class PantPrincipalController extends Controller implements Initializable
     public static boolean animacionTermin = true;
     public static AnchorPane anchorPane;
     @FXML
-    private Label lbCostoInicial;
-    @FXML
     private Label lbCostoFinal;
     @FXML
     private Label lbRecorridoEstimado;
@@ -218,8 +216,16 @@ public class PantPrincipalController extends Controller implements Initializable
         Dijsktra d = new Dijsktra(mapa);
         d.ejecutar(ini);
         d.marcarRutaCorta(fin, Color.BLACK);
+        int conTemp=0;
         ArrayList<Arista> rutaConAristasAlrevez = d.getAux();
-
+        
+        if(ini.equals(nodoOrigen))
+        {
+        for(Arista t: d.getAux()){
+            conTemp += t.getPeso();
+        }
+        lbRecorridoEstimado.setText(""+conTemp);
+        }
         ruta.add(ini);
         //Aumenta el peso a la arista para recalcular la ruta 
         /*if (!ini.equals(nodoOrigen)) {
@@ -228,6 +234,7 @@ public class PantPrincipalController extends Controller implements Initializable
             }
         }*/
         int cont = 0;
+        
         for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
             Arista arista = rutaConAristasAlrevez.get(i);
             if (ruta.get(cont) == arista.getDestino()) {
@@ -237,24 +244,44 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             cont++;
         }
-        trazarCarro(ini, fin, carro);
+        Arista aristaAux = null;
+        if(!d.getAux().isEmpty()){
+        aristaAux = rutaConAristasAlrevez.get(rutaConAristasAlrevez.size() - 1);
+        }
+        trazarCarro(ini, fin, carro,aristaAux);
     }
-
-    private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro) {
+    private int contDistanciaR=0;
+    private int tTrafico =1500;
+    public void modificarTiempo()
+    {
+        if(rbTraficoBajo.isSelected())
+        {
+            tTrafico =1500;
+        }
+        else if(rbTraficoMedio.isSelected())
+        {
+            tTrafico =2500;
+        }
+        else
+        {
+            tTrafico =3500;
+        }
+    }
+    private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro,Arista a) {
         //Agrega el carro solo si es el primer nodo ya que es un metodo recursivo
         if (ini.equals(nodoOrigen) && animacionTermin) {
             carro.setLayoutX((ruta.get(0).getCenterX()) - ((carro.getFitWidth()) / 2));
             carro.setLayoutY((ruta.get(0).getCenterY()) - ((carro.getFitHeight()) / 2));
             apCentro.getChildren().add(carro);
         }
-
         int i = ruta.indexOf(ini);
+        modificarTiempo();
         //Crea la animacion
         Timeline timeline = new Timeline();
         KeyValue kv = new KeyValue(carro.layoutXProperty(), (ruta.get(i).getCenterX() - ((carro.getFitWidth()) / 2)));
         KeyValue kvy = new KeyValue(carro.layoutYProperty(), (ruta.get(i).getCenterY() - ((carro.getFitHeight()) / 2)));
-        KeyFrame kf = new KeyFrame(Duration.millis(1500), kv);
-        KeyFrame kfy = new KeyFrame(Duration.millis(1500), kvy);
+        KeyFrame kf = new KeyFrame(Duration.millis(tTrafico), kv);
+        KeyFrame kfy = new KeyFrame(Duration.millis(tTrafico), kvy);
         timeline.getKeyFrames().addAll(kf, kfy);
         timeline.play();
 
@@ -273,10 +300,16 @@ public class PantPrincipalController extends Controller implements Initializable
                 //Genera la ruta hasta que llegue al destino
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
                     carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY()) + 270);
-
+                    
+                    contDistanciaR += a.getPeso();
+                    lbRecorridoFinal.setText(""+contDistanciaR);
+                    
                     GenerarRuta(ruta.get(i + 1), fin, carro);
                 } else {
+                    contDistanciaR = 0;
+                    //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
+                        
                         t.setStroke(Color.TRANSPARENT);
                     });
                     apCentro.getChildren().remove(carro);
