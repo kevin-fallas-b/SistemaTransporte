@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -90,6 +92,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Boolean agregarReparacion = false;//igual que arriba
     public static Integer matPeso[][] = new Integer[100][100];
     private ArrayList<Nodo> ruta = new ArrayList();
+    public static boolean animacionTermin = true;
 
     /**
      * Initializes the controller class.
@@ -207,13 +210,9 @@ public class PantPrincipalController extends Controller implements Initializable
                         if (nodoOrigen == null) {
                             nodoOrigen = nodo;
                         } else {
-                            GenerarRuta(nodoOrigen, nodo);
+                            animacionTermin = true;
+                            GenerarRuta(nodoOrigen, nodo, new Vehiculo());
                             nodoOrigen = null;
-                            mapa.getDestinos().stream().forEach((t) -> {
-                                t.setMarca(false);
-                                t.setLongitudCamino(0);
-                                t.setNodoAntecesorDisjktra(null);
-                            });
                         }
                         x1 = x2;
                         y1 = y2;
@@ -224,15 +223,20 @@ public class PantPrincipalController extends Controller implements Initializable
             y1++;
         }
     };
-    
 
-    private void GenerarRuta(Nodo ini, Nodo fin) {
+    private void GenerarRuta(Nodo ini, Nodo fin, Vehiculo carro) {
         ruta.clear();
         Dijsktra d = new Dijsktra(mapa);
         d.ejecutar(ini);
         d.marcarRutaCorta(fin, Color.CORAL);
         ArrayList<Arista> rutaConAristasAlrevez = d.getAux();
+
         ruta.add(ini);
+        //Aumenta el peso a la arista para recalcular la ruta 
+        /*if(ini.equals(nodoOrigen)){
+            d.getAux().get(2).setPeso(d.getAux().get(2).getPeso()+ 100);
+        }*/
+
         int cont = 0;
         for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
             Arista arista = rutaConAristasAlrevez.get(i);
@@ -243,23 +247,48 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             cont++;
         }
-        trazarCarro();
+
+        trazarCarro(ini, fin, carro);
+
     }
 
-    private void trazarCarro() {
-        Vehiculo carro = new Vehiculo();
-        carro.setLayoutX((ruta.get(0).getCenterX()) - ((carro.getFitWidth()) / 2));
-        carro.setLayoutY((ruta.get(0).getCenterY()) - ((carro.getFitHeight()) / 2));
-        apCentro.getChildren().add(carro);
-        Timeline timeline = new Timeline();
-        for (int i = 0; i < ruta.size(); i++) {
-            KeyValue kv = new KeyValue(carro.layoutXProperty(), (ruta.get(i).getCenterX() - ((carro.getFitWidth()) / 2)));
-            KeyValue kvy = new KeyValue(carro.layoutYProperty(), (ruta.get(i).getCenterY() - ((carro.getFitHeight()) / 2)));
-            KeyFrame kf = new KeyFrame(Duration.millis(1500*i), kv);
-            KeyFrame kfy = new KeyFrame(Duration.millis(1500*i), kvy);
-            timeline.getKeyFrames().addAll(kf, kfy);
+    private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro) {
+        //Agrega el carro solo si es el primer nodo ya que es un metodo recursivo
+        if (ini.equals(nodoOrigen) && animacionTermin) {
+            carro.setLayoutX((ruta.get(0).getCenterX()) - ((carro.getFitWidth()) / 2));
+            carro.setLayoutY((ruta.get(0).getCenterY()) - ((carro.getFitHeight()) / 2));
+            apCentro.getChildren().add(carro);
         }
+
+        int i = ruta.indexOf(ini);
+        //Crea la animacion
+        Timeline timeline = new Timeline();
+        KeyValue kv = new KeyValue(carro.layoutXProperty(), (ruta.get(i).getCenterX() - ((carro.getFitWidth()) / 2)));
+        KeyValue kvy = new KeyValue(carro.layoutYProperty(), (ruta.get(i).getCenterY() - ((carro.getFitHeight()) / 2)));
+        KeyFrame kf = new KeyFrame(Duration.millis(1500), kv);
+        KeyFrame kfy = new KeyFrame(Duration.millis(1500), kvy);
+        timeline.getKeyFrames().addAll(kf, kfy);
         timeline.play();
+
+        //Evita que los hilos no afecten la vista y no se caiga el programa
+        Platform.runLater(() -> {
+            mapa.getDestinos().stream().forEach((t) -> {
+                t.setMarca(false);
+                t.setLongitudCamino(0);
+                t.setNodoAntecesorDisjktra(null);
+            });
+
+            //Permite hacer recursividad cada vez que termina de situarse en un nodo
+            timeline.setOnFinished((param) -> {
+                //La animacion termina
+                animacionTermin = true;
+                //Genera la ruta hasta que llegue al destino
+                if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
+                    GenerarRuta(ruta.get(i + 1), fin, carro);
+                }
+            });
+        });
+
     }
 
     @FXML
