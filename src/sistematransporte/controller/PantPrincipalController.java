@@ -93,7 +93,7 @@ public class PantPrincipalController extends Controller implements Initializable
     public static Integer matPeso[][] = new Integer[100][100];
     private ArrayList <Nodo> ruta = new ArrayList();
     public static boolean animacionTermin = true;
-
+    public static AnchorPane anchorPane;
     /**
      * Initializes the controller class.
      *
@@ -102,7 +102,6 @@ public class PantPrincipalController extends Controller implements Initializable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         try {
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
@@ -111,6 +110,7 @@ public class PantPrincipalController extends Controller implements Initializable
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
             llenarMatPeso();
+            anchorPane = apCentro;
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -248,9 +248,7 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             cont++;
         }
-
         trazarCarro(ini, fin, carro);
-
     }
 
     private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro) {

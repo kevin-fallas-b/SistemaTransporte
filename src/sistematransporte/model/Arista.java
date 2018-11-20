@@ -6,9 +6,13 @@
 package sistematransporte.model;
 
 import java.util.List;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import sistematransporte.controller.PantPrincipalController;
+import static sistematransporte.controller.PantPrincipalController.anchorPane;
 
 /**
  *
@@ -30,9 +34,9 @@ public class Arista extends Line {
 
     public Arista(double startX, double startY, double endX, double endY) {
         super(startX, startY, endX, endY);
-        this.setStrokeWidth(5.00);
-        this.setStroke(null);
-        
+        this.setStrokeWidth(10.00);
+        this.setStroke(Color.TRANSPARENT);
+        this.setOnMouseClicked(click);
         
     }
 
@@ -85,5 +89,18 @@ public class Arista extends Line {
         Double p = inicio.distance(fin);
         this.peso = p.intValue();
     }
+    
+    EventHandler <MouseEvent> click = (MouseEvent event)->{
+        
+        Accidente accidente = new Accidente();
+        
+        Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
+        
+        accidente.setLayoutX(pMedio.getX() - accidente.getFitHeight()/2);
+        accidente.setLayoutY(pMedio.getY() - accidente.getFitWidth()/2);
+        
+        anchorPane.getChildren().add(accidente);
+        
+    };
     
 }
