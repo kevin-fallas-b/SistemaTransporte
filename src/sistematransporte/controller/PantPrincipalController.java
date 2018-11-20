@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
@@ -99,6 +101,8 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private Label lbTiempo;
     Boolean enEjecucion = false;
+    @FXML
+    private Label lbTiempoMin;
 
     /**
      * Initializes the controller class.
@@ -109,7 +113,7 @@ public class PantPrincipalController extends Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-
+            lbTiempoMin.setText("0");
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
             iniciarMapa();
@@ -190,6 +194,11 @@ public class PantPrincipalController extends Controller implements Initializable
                             nodo.setFill(Color.AQUA);
                             if (nodoOrigen == null&&!enEjecucion) {
                                 nodoOrigen = nodo;
+                                lbTiempoMin.setText("0");
+                                lbTiempo.setText("");
+                                lbCostoFinal.setText("");
+                                lbRecorridoFinal.setText("");
+                                lbRecorridoEstimado.setText("");
                             } else {
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
@@ -211,7 +220,43 @@ public class PantPrincipalController extends Controller implements Initializable
         }
 
     };
+    private Timer timer;
+    //private int costoDeViaje=0;
+    private void calcularTarifa()
+    {
+        float valorTiempo = 50;
+        float valorRecorrido = 4;
+        float tem =Float.valueOf(lbTiempoMin.getText());
+        float tem2 = Float.valueOf(lbTiempo.getText())/60;
+        Float tiempoFin = (tem*valorTiempo) + (tem2*valorTiempo);
+        float valorR = Integer.valueOf(lbRecorridoFinal.getText())*valorRecorrido;
+        System.out.println("valor ruta "+valorR);
+        lbCostoFinal.setText("" + (valorR+tiempoFin));
+    }
+    private void tiempo()
+    {
+        this.timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            int tic =0;
+            int min =1;
+            @Override
+            public void run() {
+                
+                Platform.runLater(() -> {
+                        lbTiempo.setText(String.valueOf(tic));
+                        tic++;
+                        if (tic > 60) {
+                            lbTiempoMin.setText(String.valueOf(min)+":");
+                            min++;
+                            tic=0;
+                        }
 
+                    });
+                
+            }
+        };
+        timer.schedule(timerTask, 0, 1000);
+    }
     private void GenerarRuta(Nodo ini, Nodo fin, Vehiculo carro) {
         ruta.clear();
         Dijsktra d = new Dijsktra(mapa);
@@ -221,6 +266,7 @@ public class PantPrincipalController extends Controller implements Initializable
         ArrayList<Arista> rutaConAristasAlrevez = d.getAux();
 
         if (ini.equals(nodoOrigen)) {
+             tiempo();
             for (Arista t : d.getAux()) {
                 conTemp += t.getPeso();
             }
@@ -306,6 +352,8 @@ public class PantPrincipalController extends Controller implements Initializable
                     mapa.getDestinos().stream().forEach((t) -> {
                         t.setFill(Color.CORAL);
                     });
+                    timer.cancel();
+                    calcularTarifa();
                     enEjecucion=false;
                     //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
