@@ -30,6 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import sistematransporte.model.Accidente;
 import sistematransporte.model.Arista;
 import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
@@ -99,6 +100,8 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private Label lbTiempo;
     Boolean enEjecucion = false;
+    public static ArrayList<Arista> accidentes = new ArrayList();
+    public static ArrayList<Accidente> imagenesAccidentes = new ArrayList();
 
     /**
      * Initializes the controller class.
@@ -227,12 +230,6 @@ public class PantPrincipalController extends Controller implements Initializable
             lbRecorridoEstimado.setText("" + conTemp);
         }
         ruta.add(ini);
-        //Aumenta el peso a la arista para recalcular la ruta 
-        /*if (!ini.equals(nodoOrigen)) {
-            if (!d.getAux().isEmpty()) {
-                d.getAux().get(0).setPeso(d.getAux().get(0).getPeso() + 100);
-            }
-        }*/
         int cont = 0;
 
         for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
@@ -307,9 +304,17 @@ public class PantPrincipalController extends Controller implements Initializable
                         t.setFill(Color.CORAL);
                     });
                     enEjecucion=false;
+                    
+                    if(!accidentes.isEmpty()){
+                        accidentes.clear();
+                        while(!imagenesAccidentes.isEmpty()){
+                            apCentro.getChildren().remove(imagenesAccidentes.get(0));
+                            imagenesAccidentes.remove(0);
+                        }
+                    }
                     //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
-
+                        t.setAccidente(false);
                         t.setStroke(Color.TRANSPARENT);
                     });
                     apCentro.getChildren().remove(carro);
@@ -390,7 +395,5 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             sb.append("\n");
         }
-        //Imprime la matriz
-        // System.out.println("Matriz: \n"+sb);
     }
 }
