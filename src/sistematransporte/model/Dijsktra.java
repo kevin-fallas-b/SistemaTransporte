@@ -53,7 +53,6 @@ public class Dijsktra {
                     if (!aux2.isMarca()&&!enlace.getAccidente()) {
 
                         if (isContenido(aux2)) {
-                            //System.out.println("aux2 "+ aux2);
                             int longitud = nodo.getLongitudCamino() + enlace.getPeso();
                             if (aux2.getLongitudCamino() > longitud) {
                                 aux2.setLongitudCamino(longitud);
@@ -97,16 +96,6 @@ public class Dijsktra {
                 llenarConAdyacentes(menor);
             }
         }
-        for (int i = 0; i < PantPrincipalController.accidentes.size(); i++) {
-            Arista accidente = PantPrincipalController.accidentes.get(i);
-            for (Arista arista : aux) {
-                if(arista.equals(accidente)){
-                    aux.remove(accidente);
-                    System.out.println("se encontro accidente en lista aux");
-                }
-                
-            }
-        }
         return aux;
     }
 
@@ -117,30 +106,15 @@ public class Dijsktra {
     private void rutaCorta(Nodo nodoFinal) {
         aux.clear();
         Nodo nAux = nodoFinal;
-        /*for (int i = 0; i < PantPrincipalController.accidentes.size(); i++) {
-            Arista accidente = PantPrincipalController.accidentes.get(i);
-            for (Nodo nodo : listaNodosAdyacentes) {
-                if(nodo == accidente.getOrigen()){
-                    nodo.getNodosAdyacentes().remove(accidente.getDestino());
-                    nodo.getNodosAdyacentes().remove(accidente.getOrigen());
-                }
-                if(nodo == accidente.getDestino()){
-                    nodo.getNodosAdyacentes().remove(accidente.getOrigen());
-                    nodo.getNodosAdyacentes().remove(accidente.getDestino());
-                }
-            }
-        }*/
         for (int i = 0; i < PantPrincipalController.accidentes.size(); i++) {
             Arista accidente = PantPrincipalController.accidentes.get(i);
             for (Arista arista : aux) {
                 if(arista.equals(accidente)){
                     aux.remove(accidente);
-                    System.out.println("se encontro accidente en lista aux");
                 }
                 
             }
         }
-        // System.out.println("nAux " + nAux.getNodoAntecesorDisjktra());
         while (nAux.getNodoAntecesorDisjktra() != null) {
             aux.add(grafo.getArista(nAux,
                     nAux.getNodoAntecesorDisjktra()));
@@ -149,21 +123,7 @@ public class Dijsktra {
 
     }
 
-    public void marcarRutaCorta(Nodo nodoFinal, Color color) {
-        /*for (int i = 0; i < PantPrincipalController.accidentes.size(); i++) {
-            Arista accidente = PantPrincipalController.accidentes.get(i);
-            for (Nodo nodo : listaNodosAdyacentes) {
-                if(nodo == accidente.getOrigen()){
-                    System.out.println(nodo.getNodosAdyacentes().remove(accidente.getDestino()));
-                    nodo.getNodosAdyacentes().remove(accidente.getOrigen());
-                }
-                if(nodo == accidente.getDestino()){
-                    nodo.getNodosAdyacentes().remove(accidente.getOrigen());
-                    nodo.getNodosAdyacentes().remove(accidente.getDestino());
-                }
-            }
-        }*/
-      
+    public void marcarRutaCorta(Nodo nodoFinal, Color color) {      
         if (nodoFinal != null) {
             rutaCorta(nodoFinal);
             aux.stream().forEach((t) -> {

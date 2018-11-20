@@ -41,8 +41,6 @@ public class Mapa extends ImageView {
 
     public Arista getArista(Nodo origen, Nodo destino) {
         Arista aux = null;
-        //  System.out.println("ORIGEN "+ origen + "DESTINO "+destino);
-
         for (Arista a : getAristas()) {
             if ((a.getOrigen().equals(origen) && a.getDestino().equals(destino)) || (a.getDestino().equals(origen) && a.getOrigen().equals(destino))) {
                 aux = a;
