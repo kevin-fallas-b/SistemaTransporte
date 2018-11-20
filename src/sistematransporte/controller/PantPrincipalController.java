@@ -224,10 +224,7 @@ public class PantPrincipalController extends Controller implements Initializable
                 }
                 y1++;
             }
-        } else {
-            //mensaje.show(Alert.AlertType.INFORMATION, "Informacion de mapa", "Debes agregar un accidente o un cierre a la ruta.");
         }
-
     };
     public static Timer timer;
     //private int costoDeViaje=0;
@@ -239,7 +236,6 @@ public class PantPrincipalController extends Controller implements Initializable
         float tem2 = Float.valueOf(lbTiempo.getText())/60;
         Float tiempoFin = (tem*valorTiempo) + (tem2*valorTiempo);
         float valorR = Integer.valueOf(lbRecorridoFinal.getText())*valorRecorrido;
-        System.out.println("valor ruta "+valorR);
         lbCostoFinal.setText("" + (valorR+tiempoFin));
     }
     private void tiempo()
@@ -314,9 +310,9 @@ public class PantPrincipalController extends Controller implements Initializable
         }
 
     }
-
+    Arista arPintar = new Arista();
     private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro, Arista a) {
-        //Agrega el carro solo si es el primer nodo ya que es un metodo recursivo
+        arPintar.setStroke(Color.RED);
         if (ini.equals(nodoOrigen) && animacionTermin) {
             carro.setLayoutX((ruta.get(0).getCenterX()) - ((carro.getFitWidth()) / 2));
             carro.setLayoutY((ruta.get(0).getCenterY()) - ((carro.getFitHeight()) / 2));
@@ -324,7 +320,6 @@ public class PantPrincipalController extends Controller implements Initializable
         }
         int i = ruta.indexOf(ini);
         modificarTiempo();
-        //Crea la animacion
         Timeline timeline = new Timeline();
         KeyValue kv = new KeyValue(carro.layoutXProperty(), (ruta.get(i).getCenterX() - ((carro.getFitWidth()) / 2)));
         KeyValue kvy = new KeyValue(carro.layoutYProperty(), (ruta.get(i).getCenterY() - ((carro.getFitHeight()) / 2)));
@@ -332,30 +327,26 @@ public class PantPrincipalController extends Controller implements Initializable
         KeyFrame kfy = new KeyFrame(Duration.millis(tTrafico), kvy);
         timeline.getKeyFrames().addAll(kf, kfy);
         timeline.play();
-
-        //Evita que los hilos no afecten la vista y no se caiga el programa
         Platform.runLater(() -> {
             mapa.getDestinos().stream().forEach((t) -> {
                 t.setMarca(false);
                 t.setLongitudCamino(0);
                 t.setNodoAntecesorDisjktra(null);
             });
-
-            //Permite hacer recursividad cada vez que termina de situarse en un nodo
             timeline.setOnFinished((param) -> {
-                //La animacion termina
+                //aqui pinta lo recorrido
+                               
                 animacionTermin = true;
-                //Genera la ruta hasta que llegue al destino
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
                     carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY()) + 270);
-                    //Aumenta el peso de la arista
-
                     contDistanciaR += a.getPeso();
                     lbRecorridoFinal.setText("" + contDistanciaR);
                     modificarTrafico();
                     GenerarRuta(ruta.get(i + 1), fin, carro);
+                    arPintar=a;
 
                 } else {
+                    arPintar=new Arista();
                     rTrafico = null;
                     contDistanciaR = 0;
                     mapa.getDestinos().stream().forEach((t) -> {
@@ -374,14 +365,12 @@ public class PantPrincipalController extends Controller implements Initializable
                         }
                     }
                     multiplicar = 1;
-                    //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
                         t.setAccidente(false);
                         t.setStroke(Color.TRANSPARENT);
                         t.setStrokeWidth(3);
                     });
                     apCentro.getChildren().remove(carro);
-                    //System.out.println(timeline.getTotalDuration());
                 }
             });
         });
@@ -439,9 +428,6 @@ public class PantPrincipalController extends Controller implements Initializable
                     } else {
                         peso = peso * multiplicar;
                     }
-
-                    //peso = peso + peso * multiplicar;
-                    //System.out.println("PESO OR: " + t.getPeso() + " PESO Corregido " + peso);
                     t.setPeso(peso);
                 });
                 rbTraficoBajo.setSelected(true);

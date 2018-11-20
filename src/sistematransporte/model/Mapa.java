@@ -44,7 +44,6 @@ public class Mapa extends ImageView {
         for (Arista a : getAristas()) {
             if ((a.getOrigen().equals(origen) && a.getDestino().equals(destino)) || (a.getDestino().equals(origen) && a.getOrigen().equals(destino))) {
                 aux = a;
-                // System.out.println("ENTRO");
             }
         }
         return aux;
