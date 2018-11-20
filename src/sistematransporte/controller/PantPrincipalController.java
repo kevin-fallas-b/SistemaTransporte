@@ -91,7 +91,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
     private Boolean agregarReparacion = false;//igual que arriba
     public static Integer matPeso[][] = new Integer[100][100];
-    private ArrayList<Nodo> ruta = new ArrayList();
+    private ArrayList <Nodo> ruta = new ArrayList();
     public static boolean animacionTermin = true;
 
     /**
@@ -106,7 +106,6 @@ public class PantPrincipalController extends Controller implements Initializable
         try {
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
-
             iniciarMapa();
             apCentro.setOnMouseClicked(onClick);
             apCentro.setOnMouseReleased(seleccionarDestino);
@@ -289,7 +288,11 @@ public class PantPrincipalController extends Controller implements Initializable
                     GenerarRuta(ruta.get(i + 1), fin, carro);
                 }
                 else{
-                    System.out.println(timeline.getTotalDuration());
+                     mapa.getAristas().stream().forEach((t) -> {
+                         t.setStroke(null);
+                     });
+                     apCentro.getChildren().remove(carro);
+                    //System.out.println(timeline.getTotalDuration());
                 }
             });
         });
