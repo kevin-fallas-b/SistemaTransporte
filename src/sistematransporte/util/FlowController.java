@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sistematransporte.SistemaTransporte;
 import sistematransporte.controller.Controller;
+import sistematransporte.controller.PantPrincipalController;
 
 /**
  *
@@ -156,6 +157,11 @@ public class FlowController {
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.show();
+        stage.setOnCloseRequest((event) -> {
+            if (PantPrincipalController.timerEnEjecucion) {
+                PantPrincipalController.timer.cancel();
+            }
+        });
 
     }
 
@@ -188,7 +194,7 @@ public class FlowController {
     public static void setIdioma(ResourceBundle idioma) {
         FlowController.idioma = idioma;
     }
-    
+
     public void initialize() {
         this.loaders.clear();
     }
@@ -196,6 +202,7 @@ public class FlowController {
     public void salir() {
         this.mainStage.close();
     }
+
     //No habia ningun metodo que cambiara de escena sin cambiar de ventana, esto lo soluciona y mantiene uso de FlowController
     public void goViewSameWindow(String scene, Button bot) throws IOException {
         Parent parent = FXMLLoader.load(SistemaTransporte.class.getResource("view/" + scene + ".fxml"));

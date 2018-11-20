@@ -108,6 +108,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Label lbTiempoMin;
     public static ArrayList<Arista> accidentes = new ArrayList();
     public static ArrayList<Accidente> imagenesAccidentes = new ArrayList();
+    public static Boolean timerEnEjecucion = false;
 
 
     /**
@@ -227,7 +228,7 @@ public class PantPrincipalController extends Controller implements Initializable
         }
 
     };
-    private Timer timer;
+    public static Timer timer;
     //private int costoDeViaje=0;
     private void calcularTarifa()
     {
@@ -242,6 +243,7 @@ public class PantPrincipalController extends Controller implements Initializable
     }
     private void tiempo()
     {
+        timerEnEjecucion = true;
         this.timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             int tic =0;
@@ -358,6 +360,7 @@ public class PantPrincipalController extends Controller implements Initializable
                         t.setFill(Color.CORAL);
                     });
                     timer.cancel();
+                    timerEnEjecucion=false;
                     calcularTarifa();
                     enEjecucion=false;
                     
