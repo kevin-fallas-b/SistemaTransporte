@@ -291,7 +291,6 @@ public class PantPrincipalController extends Controller implements Initializable
                 else{
                     System.out.println(timeline.getTotalDuration());
                 }
-                
             });
         });
 
