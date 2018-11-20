@@ -32,6 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import model.Floyd;
 import sistematransporte.model.Accidente;
 import sistematransporte.model.Arista;
 import sistematransporte.model.Dijsktra;
@@ -110,7 +111,7 @@ public class PantPrincipalController extends Controller implements Initializable
     public static ArrayList <Accidente> imagenesAccidentes = new ArrayList();
     public static ArrayList <Arista> auxAristas;    
     public static Boolean timerEnEjecucion = false;
-
+    private Floyd f = new Floyd();
 
     /**
      * Initializes the controller class.
@@ -211,6 +212,7 @@ public class PantPrincipalController extends Controller implements Initializable
                             } else {
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
+                                    int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
                                     GenerarRuta(nodoOrigen, nodo, new Vehiculo());
                                     nodoOrigen = null;
                                     enEjecucion = true;
@@ -516,8 +518,8 @@ public class PantPrincipalController extends Controller implements Initializable
                         }
                     }
                     //Si no se encontro la arista con los nodos auxiliares se llena la matriz con un peso 0
-                    if (matPeso[i][j] == null) {
-                        matPeso[i][j] = 0;
+                    if(matPeso[i][j] == null) {
+                        matPeso[i][j] = 10000;
                     }
                 } //Si es la diagonal se llena la matriz con peso 0
                 else {
@@ -528,5 +530,6 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             sb.append("\n");
         }
+        System.out.println(sb);
     }
 }
