@@ -11,7 +11,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import sistematransporte.controller.PantPrincipalController;
+import static sistematransporte.controller.PantPrincipalController.agregarAccidente;
 import static sistematransporte.controller.PantPrincipalController.anchorPane;
 
 /**
@@ -37,7 +37,7 @@ public class Arista extends Line {
         this.setStrokeWidth(10.00);
         this.setStroke(Color.TRANSPARENT);
         this.setOnMouseClicked(click);
-        
+
     }
 
     public void setOrigen(Nodo origen) {
@@ -61,13 +61,13 @@ public class Arista extends Line {
     }
 
     public void agregarNodos(List<Nodo> nodos) {
-        
+
         Point2D inicio = new Point2D(0, 0);
         Point2D fin = new Point2D(0, 0);
-        
+
         Nodo aux = new Nodo();
         Nodo aux2 = new Nodo();
-        
+
         for (Nodo nodo : nodos) {
             if (nodo.getCenterX() == getStartX() && nodo.getCenterY() == getStartY()) {
                 setOrigen(nodo);
@@ -81,26 +81,29 @@ public class Arista extends Line {
                 aux2 = nodo;
             }
         }
-        
+
         aux.getNodosAdyacentes().add(aux2);
-        
+
         aux2.getNodosAdyacentes().add(aux);
-        
+
         Double p = inicio.distance(fin);
         this.peso = p.intValue();
     }
-    
-    EventHandler <MouseEvent> click = (MouseEvent event)->{
-        
-        Accidente accidente = new Accidente();
-        
-        Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
-        
-        accidente.setLayoutX(pMedio.getX() - accidente.getFitHeight()/2);
-        accidente.setLayoutY(pMedio.getY() - accidente.getFitWidth()/2);
-        
-        anchorPane.getChildren().add(accidente);
-        
+
+    EventHandler<MouseEvent> click = (MouseEvent event) -> {
+        System.out.println("CD");
+        if (agregarAccidente) {
+            Accidente accidente = new Accidente();
+
+            Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
+
+            accidente.setLayoutX(pMedio.getX() - accidente.getFitHeight() / 2);
+            accidente.setLayoutY(pMedio.getY() - accidente.getFitWidth() / 2);
+
+            anchorPane.getChildren().add(accidente);
+            agregarAccidente = false;
+        }
+
     };
-    
+
 }

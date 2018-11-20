@@ -22,9 +22,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -35,14 +35,15 @@ import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
 import sistematransporte.model.Vehiculo;
+import sistematransporte.util.Mensaje;
 
 /**
  * FXML Controller class
  *
  * @author Kevin F
  */
-
 public class PantPrincipalController extends Controller implements Initializable {
+
     @FXML
     private AnchorPane apCentro;
     @FXML
@@ -86,12 +87,14 @@ public class PantPrincipalController extends Controller implements Initializable
     @FXML
     private JFXButton btnOcultarNodos;
     private Mapa mapa = new Mapa();
-    private Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
-    private Boolean agregarReparacion = false;//igual que arriba
-    public static Integer matPeso[][] = new Integer[100][100];
-    private ArrayList <Nodo> ruta = new ArrayList();
+    public static Boolean agregarAccidente = false;//bool utilizado para solo agregar un accidente a la vez
+    public static Boolean agregarReparacion = false;//igual que arriba
+    private final Mensaje mensaje = new Mensaje();
+    public static Integer matPeso[][];
+    private ArrayList<Nodo> ruta = new ArrayList();
     public static boolean animacionTermin = true;
     public static AnchorPane anchorPane;
+    
     /**
      * Initializes the controller class.
      *
@@ -101,14 +104,15 @@ public class PantPrincipalController extends Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
             iniciarMapa();
-            apCentro.setOnMouseClicked(onClick);
             apCentro.setOnMouseReleased(seleccionarDestino);
             apOpcionesDes.setVisible(false);
             llenarMatPeso();
             anchorPane = apCentro;
+            
         } catch (IOException ex) {
             Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -169,56 +173,41 @@ public class PantPrincipalController extends Controller implements Initializable
 
     }
 
-    private EventHandler<MouseEvent> onClick = (MouseEvent event) -> {
-        if (event.getSceneX() < 422) {
-            if (agregarAccidente || agregarReparacion) {
-                ubicarArista(event.getSceneX(), event.getSceneY());
-                ImageView imagen;
-                if (agregarAccidente) {
-                    imagen = new ImageView(new Image("sistematransporte/resources/accidente.png"));
-                    agregarAccidente = false;
-                } else {
-                    imagen = new ImageView(new Image("sistematransporte/resources/trabajoVia.png"));
-                    agregarReparacion = false;
-                }
-                imagen.setFitWidth(30.00);
-                imagen.setFitHeight(25.00);
-                imagen.setLayoutX(event.getSceneX() - 15);
-                imagen.setLayoutY(event.getSceneY() - 12);
-                apCentro.getChildren().add(imagen);
-            }
-        }
-    };
-
     static Nodo nodoOrigen = null;
 
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
-        //metodo que se encarga de selecionar destinos y llamar
-        Double y1 = event.getSceneY() - 10;
-        Double y2 = event.getSceneY() + 10;
+        if (!agregarAccidente && !agregarReparacion) {
+            //metodo que se encarga de selecionar destinos y llamar
+            Double y1 = event.getSceneY() - 10;
+            Double y2 = event.getSceneY() + 10;
 
-        while (y1 <= y2) {
-            Double x1 = event.getSceneX() - 10;
-            Double x2 = event.getSceneX() + 10;
-            while (x1 <= x2) {
-                for (Nodo nodo : mapa.getDestinos()) {
-                    if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
-                        nodo.setFill(Color.AQUA);
-                        if (nodoOrigen == null) {
-                            nodoOrigen = nodo;
-                        } else {
-                            animacionTermin = true;
-                            GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                            nodoOrigen = null;
+            while (y1 <= y2) {
+                Double x1 = event.getSceneX() - 10;
+                Double x2 = event.getSceneX() + 10;
+                while (x1 <= x2) {
+                    for (Nodo nodo : mapa.getDestinos()) {
+                        if (x1 == nodo.getCenterX() && y1 == nodo.getCenterY()) {
+                            nodo.setFill(Color.AQUA);
+                            if (nodoOrigen == null) {
+                                nodoOrigen = nodo;
+                            } else {
+                                animacionTermin = true;
+                                GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                nodoOrigen = null;
+                            }
+                            x1 = x2;
+                            y1 = y2;
                         }
-                        x1 = x2;
-                        y1 = y2;
                     }
+                    x1++;
                 }
-                x1++;
+                y1++;
             }
-            y1++;
         }
+        else{
+            //mensaje.show(Alert.AlertType.INFORMATION, "Informacion de mapa", "Debes agregar un accidente o un cierre a la ruta.");
+        }
+
     };
 
     private void GenerarRuta(Nodo ini, Nodo fin, Vehiculo carro) {
@@ -280,15 +269,14 @@ public class PantPrincipalController extends Controller implements Initializable
                 animacionTermin = true;
                 //Genera la ruta hasta que llegue al destino
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
-                    carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY())+270);
-                    
+                    carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY()) + 270);
+
                     GenerarRuta(ruta.get(i + 1), fin, carro);
-                }
-                else{
-                     mapa.getAristas().stream().forEach((t) -> {
-                         t.setStroke(null);
-                     });
-                     apCentro.getChildren().remove(carro);
+                } else {
+                    mapa.getAristas().stream().forEach((t) -> {
+                        t.setStroke(Color.TRANSPARENT);
+                    });
+                    apCentro.getChildren().remove(carro);
                     //System.out.println(timeline.getTotalDuration());
                 }
             });
@@ -379,23 +367,5 @@ public class PantPrincipalController extends Controller implements Initializable
         }
         //Imprime la matriz
         // System.out.println("Matriz: \n"+sb);
-    }
-
-    private void ubicarArista(Double xx, Double yy) {
-        Integer x = xx.intValue();
-        Integer y = yy.intValue();
-        for (Arista arista : mapa.getAristas()) {
-            if (arista.getStartY() >= arista.getEndY()) {
-                //esta caso es una arista que va de abajo hacia arriba
-                if ((x > arista.getStartX() - 10 && x < arista.getEndX() + 10) && (y < arista.getStartY() && y > arista.getEndY())) {
-                    //System.out.println("Arista Encontrada origen: " + arista.getOrigen().getNumNodo() + " destino: " + arista.getDestino().getNumNodo());
-                }
-            } else if ((arista.getStartY() <= arista.getEndY())) {
-                //arista que va de arriba hacia abajo 
-                if ((x < arista.getStartX() + 10 && x > arista.getEndX() - 10) && (y > arista.getStartY() && y < arista.getEndY())) {
-                    //tem.out.println("Arista Encontrada origen: " + arista.getOrigen().getNumNodo() + " destino: " + arista.getDestino().getNumNodo());
-                }
-            }
-        }
     }
 }
