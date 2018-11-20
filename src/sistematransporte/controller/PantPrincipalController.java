@@ -12,13 +12,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,8 +41,8 @@ import sistematransporte.model.Vehiculo;
  *
  * @author Kevin F
  */
-public class PantPrincipalController extends Controller implements Initializable {
 
+public class PantPrincipalController extends Controller implements Initializable {
     @FXML
     private AnchorPane apCentro;
     @FXML
@@ -232,12 +230,11 @@ public class PantPrincipalController extends Controller implements Initializable
 
         ruta.add(ini);
         //Aumenta el peso a la arista para recalcular la ruta 
-        if (!ini.equals(nodoOrigen)) {
+        /*if (!ini.equals(nodoOrigen)) {
             if (!d.getAux().isEmpty()) {
                 d.getAux().get(0).setPeso(d.getAux().get(0).getPeso() + 100);
             }
-        }
-
+        }*/
         int cont = 0;
         for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
             Arista arista = rutaConAristasAlrevez.get(i);
@@ -283,6 +280,8 @@ public class PantPrincipalController extends Controller implements Initializable
                 animacionTermin = true;
                 //Genera la ruta hasta que llegue al destino
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
+                    carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY())+270);
+                    
                     GenerarRuta(ruta.get(i + 1), fin, carro);
                 }
                 else{
@@ -294,7 +293,6 @@ public class PantPrincipalController extends Controller implements Initializable
                 }
             });
         });
-
     }
 
     @FXML
@@ -354,7 +352,6 @@ public class PantPrincipalController extends Controller implements Initializable
         StringBuilder sb = new StringBuilder();
         //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
         matPeso = new Integer[mapa.getDestinos().size()][mapa.getDestinos().size()];
-
         for (int i = 0; i < mapa.getDestinos().size(); i++) {
             Nodo aux = mapa.getDestinos().get(i);//Ubicamos el nodo con el que vamos a comparar
             for (int j = 0; j < mapa.getDestinos().size(); j++) {
@@ -375,14 +372,11 @@ public class PantPrincipalController extends Controller implements Initializable
                 else {
                     matPeso[i][j] = 0;
                 }
-
                 sb.append(matPeso[i][j]);
                 sb.append("\t");
             }
-
             sb.append("\n");
         }
-
         //Imprime la matriz
         // System.out.println("Matriz: \n"+sb);
     }
