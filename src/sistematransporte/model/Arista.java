@@ -126,7 +126,7 @@ public class Arista extends Line {
             PantPrincipalController.accidentes.add(this);
             PantPrincipalController.imagenesAccidentes.add(accidente);
             this.accidente=true;
-           
+            PantPrincipalController.rutaNueva = true;
         }
         else if(agregarReparacion){
             cierre = new CierreCosevi();
@@ -138,6 +138,7 @@ public class Arista extends Line {
 
             anchorPane.getChildren().add(cierre);
             agregarReparacion = false;
+            PantPrincipalController.rutaNueva = true;
         }
     };
 }

@@ -9,7 +9,6 @@ import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class Floyd {
-    
     public int [] floyd_cam(int[][] mady,int ini, int fin){
     //RutaCorta ruta;
     int aux;
@@ -70,8 +69,6 @@ public int[] recorrido(int[][] mPesos, int [][] mRecorrido, int ini, int fin){
             nodos[cont]=pila.pop();
 			cont++;
         }
-          
-
     return nodos;
 }
     
