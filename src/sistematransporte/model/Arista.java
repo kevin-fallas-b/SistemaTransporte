@@ -31,7 +31,7 @@ public class Arista extends Line {
     public Arista(double startX, double startY, double endX, double endY) {
         super(startX, startY, endX, endY);
         this.setStrokeWidth(5.00);
-        this.setStroke(Color.BLUE);
+        this.setStroke(null);
         
         
     }

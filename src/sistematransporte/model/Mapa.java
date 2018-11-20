@@ -22,8 +22,9 @@ import javafx.scene.paint.Color;
  */
 public class Mapa extends ImageView {
 
-    public static final LinkedList <Nodo> destinos = new LinkedList();
-    private final LinkedList <Arista> aristas = new LinkedList();
+    public static final LinkedList<Nodo> destinos = new LinkedList();
+    private final LinkedList<Arista> aristas = new LinkedList();
+
     public Mapa() {
         super();
         this.setFitHeight(600);
@@ -31,32 +32,31 @@ public class Mapa extends ImageView {
         this.setLayoutX(0);
         this.setLayoutY(0);
         this.setId("map");
-        
+
     }
 
     public LinkedList<Arista> getAristas() {
         return aristas;
     }
-    public Arista getArista(Nodo origen, Nodo destino)
-    {
+
+    public Arista getArista(Nodo origen, Nodo destino) {
         Arista aux = null;
-      //  System.out.println("ORIGEN "+ origen + "DESTINO "+destino);
-                
-        for(Arista a: getAristas())
-        {
-            if((a.getOrigen().equals(origen)&&a.getDestino().equals(destino))||(a.getDestino().equals(origen)&&a.getOrigen().equals(destino)))
-            {
+        //  System.out.println("ORIGEN "+ origen + "DESTINO "+destino);
+
+        for (Arista a : getAristas()) {
+            if ((a.getOrigen().equals(origen) && a.getDestino().equals(destino)) || (a.getDestino().equals(origen) && a.getOrigen().equals(destino))) {
                 aux = a;
-               // System.out.println("ENTRO");
+                // System.out.println("ENTRO");
             }
         }
         return aux;
     }
+
     public void agregarDestino(Nodo nod) {
         destinos.add(nod);
     }
 
-    public LinkedList <Nodo> getDestinos() {
+    public LinkedList<Nodo> getDestinos() {
         return destinos;
     }
 
@@ -71,24 +71,25 @@ public class Mapa extends ImageView {
     }
 
     public void cargarNodo() throws FileNotFoundException, IOException {
-        
+
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/Destinos.txt"));
         String line = null;
-        Integer i=0;
+        Integer i = 0;
         while ((line = reader.readLine()) != null) {
             String[] parts;
             parts = line.split("\\$");
             Double posx = Double.valueOf(parts[0]);
             Double posy = Double.valueOf(parts[1]);
-            
-            Nodo nod = new Nodo(posx, posy, 5.00, Color.CORAL,i);
+
+            Nodo nod = new Nodo(posx, posy, 5.00, Color.CORAL, i);
             nod.setPuntoMapa(new Point2D(posx, posy));
             i++;
             destinos.add(nod);
         }
     }
-     public void cagarAristas() throws FileNotFoundException, IOException {
-        
+
+    public void cagarAristas() throws FileNotFoundException, IOException {
+
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/aristas.txt"));
         String line = null;
 
@@ -99,11 +100,11 @@ public class Mapa extends ImageView {
             Double posy = Double.valueOf(parts[1]);
             Double posx2 = Double.valueOf(parts[2]);
             Double posy2 = Double.valueOf(parts[3]);
-            
-            Arista arista = new Arista(posx, posy, posx2, posy2); 
-            
+
+            Arista arista = new Arista(posx, posy, posx2, posy2);
+           
             arista.agregarNodos(destinos);
-            
+
             aristas.add(arista);
         }
     }

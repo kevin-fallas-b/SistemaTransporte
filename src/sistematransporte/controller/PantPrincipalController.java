@@ -228,14 +228,16 @@ public class PantPrincipalController extends Controller implements Initializable
         ruta.clear();
         Dijsktra d = new Dijsktra(mapa);
         d.ejecutar(ini);
-        d.marcarRutaCorta(fin, Color.CORAL);
+        d.marcarRutaCorta(fin, Color.BLACK);
         ArrayList<Arista> rutaConAristasAlrevez = d.getAux();
 
         ruta.add(ini);
         //Aumenta el peso a la arista para recalcular la ruta 
-        /*if(ini.equals(nodoOrigen)){
-            d.getAux().get(2).setPeso(d.getAux().get(2).getPeso()+ 100);
-        }*/
+        if (!ini.equals(nodoOrigen)) {
+            if (!d.getAux().isEmpty()) {
+                d.getAux().get(0).setPeso(d.getAux().get(0).getPeso() + 100);
+            }
+        }
 
         int cont = 0;
         for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
@@ -286,6 +288,10 @@ public class PantPrincipalController extends Controller implements Initializable
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
                     GenerarRuta(ruta.get(i + 1), fin, carro);
                 }
+                else{
+                    System.out.println(timeline.getTotalDuration());
+                }
+                
             });
         });
 

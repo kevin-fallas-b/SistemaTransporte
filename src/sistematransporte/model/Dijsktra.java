@@ -120,7 +120,7 @@ public class Dijsktra {
             aux.stream().forEach((t) -> {
                 if (t != null) {
                     t.setStroke(color);
-                    t.setStrokeWidth(10);
+                    t.setStrokeWidth(5);
                 }
             });
         }
