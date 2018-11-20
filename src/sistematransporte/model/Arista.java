@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import sistematransporte.controller.PantPrincipalController;
 import static sistematransporte.controller.PantPrincipalController.agregarAccidente;
+import static sistematransporte.controller.PantPrincipalController.agregarReparacion;
 import static sistematransporte.controller.PantPrincipalController.anchorPane;
 
 /**
@@ -20,7 +21,6 @@ import static sistematransporte.controller.PantPrincipalController.anchorPane;
  * @author Kevin F
  */
 public class Arista extends Line {
-
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
@@ -42,6 +42,8 @@ public class Arista extends Line {
         this.click = click;
     }
     
+
+    private CierreCosevi cierre; 
     public Nodo getOrigen() {
         return origen;
     }
@@ -61,6 +63,8 @@ public class Arista extends Line {
     public void setOrigen(Nodo origen) {
         this.origen = origen;
     }
+
+    
 
     public Nodo getDestino() {
         return destino;
@@ -124,7 +128,16 @@ public class Arista extends Line {
             this.accidente=true;
            
         }
+        else if(agregarReparacion){
+            cierre = new CierreCosevi();
 
+            Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
+
+            cierre.setLayoutX(pMedio.getX() - cierre.getFitHeight() / 2);
+            cierre.setLayoutY(pMedio.getY() - cierre.getFitWidth() / 2);
+
+            anchorPane.getChildren().add(cierre);
+            agregarReparacion = false;
+        }
     };
-
 }
