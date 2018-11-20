@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
  * @author Carlos Olivares
  */
 public class Accidente extends ImageView{
-
     public Accidente() {
         super();
         this.setId("accidente");
