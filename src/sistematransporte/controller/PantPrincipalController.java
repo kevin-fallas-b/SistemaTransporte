@@ -35,6 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import sistematransporte.model.Accidente;
 import sistematransporte.model.Arista;
+import sistematransporte.model.CierreCosevi;
 import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
 import sistematransporte.model.Nodo;
@@ -109,6 +110,8 @@ public class PantPrincipalController extends Controller implements Initializable
     private Label lbTiempoMin;
     public static ArrayList<Arista> accidentes = new ArrayList();
     public static ArrayList<Accidente> imagenesAccidentes = new ArrayList();
+    public static ArrayList<CierreCosevi> cierresCosevi = new ArrayList();
+    public static ArrayList<CierreCosevi> imagenesCierres = new ArrayList();
     public static ArrayList<Arista> auxAristas;
     public static Boolean timerEnEjecucion = false;
     public static Boolean rutaNueva = false;
@@ -212,9 +215,15 @@ public class PantPrincipalController extends Controller implements Initializable
                             } else {
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
-                                    GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                    nodoOrigen = null;
-                                    enEjecucion = true;
+                                    if (rbNoDirigido.isSelected()) {
+                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        nodoOrigen = null;
+                                        enEjecucion = true;
+                                    }else{//aqui es si se esta trabajando con grafo dirigido, recordar cambiar
+                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        nodoOrigen = null;
+                                        enEjecucion = true;
+                                    }
                                 }
                             }
                             x1 = x2;
@@ -233,11 +242,11 @@ public class PantPrincipalController extends Controller implements Initializable
     private void calcularTarifa() {
         float valorTiempo = 50;
         float valorRecorrido = 4;
-        float tem =Float.valueOf(lbTiempoMin.getText());
-        float tem2 = Float.valueOf(lbTiempo.getText())/60;
-        Float tiempoFin = (tem*valorTiempo) + (tem2*valorTiempo);
-        float valorR = Integer.valueOf(lbRecorridoFinal.getText())*valorRecorrido;
-        lbCostoFinal.setText("" + (valorR+tiempoFin));
+        float tem = Float.valueOf(lbTiempoMin.getText());
+        float tem2 = Float.valueOf(lbTiempo.getText()) / 60;
+        Float tiempoFin = (tem * valorTiempo) + (tem2 * valorTiempo);
+        float valorR = Integer.valueOf(lbRecorridoFinal.getText()) * valorRecorrido;
+        lbCostoFinal.setText("" + (valorR + tiempoFin));
 
     }
 
@@ -318,6 +327,7 @@ public class PantPrincipalController extends Controller implements Initializable
 
     }
     Arista arPintar = new Arista();
+
     private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro, Arista a) {
         arPintar.setStroke(Color.RED);
         if (ini.equals(nodoOrigen) && animacionTermin) {
@@ -342,7 +352,7 @@ public class PantPrincipalController extends Controller implements Initializable
             });
             timeline.setOnFinished((param) -> {
                 //aqui pinta lo recorrido
-                               
+
                 animacionTermin = true;
                 if (ruta.indexOf(ruta.get(i)) + 1 < ruta.size() && !ini.equals(fin)) {
                     carro.setRotate(carro.rotarCarro(ruta.get(i).getCenterX(), ruta.get(i).getCenterY(), ruta.get(i + 1).getCenterX(), ruta.get(i + 1).getCenterY()) + 270);
@@ -363,10 +373,10 @@ public class PantPrincipalController extends Controller implements Initializable
                     modificarTrafico();
 
                     GenerarRuta(ruta.get(i + 1), fin, carro);
-                    arPintar=a;
+                    arPintar = a;
 
                 } else {
-                    arPintar=new Arista();
+                    arPintar = new Arista();
                     rTrafico = null;
                     contDistanciaR = 0;
                     mapa.getDestinos().stream().forEach((t) -> {
@@ -377,16 +387,23 @@ public class PantPrincipalController extends Controller implements Initializable
                     calcularTarifa();
                     enEjecucion = false;
                     rbTraficoBajo.setSelected(true);
-                    if (!accidentes.isEmpty()) {
+                    if (!accidentes.isEmpty() || !cierresCosevi.isEmpty()) {
                         accidentes.clear();
+                        cierresCosevi.clear();
                         while (!imagenesAccidentes.isEmpty()) {
                             apCentro.getChildren().remove(imagenesAccidentes.get(0));
                             imagenesAccidentes.remove(0);
+                        }
+                        while (!imagenesCierres.isEmpty()) {
+                            apCentro.getChildren().remove(imagenesCierres.get(0));
+                            imagenesCierres.remove(0);
+
                         }
                     }
                     multiplicar = 1;
                     mapa.getAristas().stream().forEach((t) -> {
                         t.setAccidente(false);
+                        t.setReparacion(false);
                         t.setStroke(Color.TRANSPARENT);
                         t.setStrokeWidth(3);
                     });

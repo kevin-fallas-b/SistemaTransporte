@@ -21,10 +21,20 @@ import static sistematransporte.controller.PantPrincipalController.anchorPane;
  * @author Kevin F
  */
 public class Arista extends Line {
+
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
     private Boolean accidente;
+    private Boolean reparacion;
+
+    public Boolean getReparacion() {
+        return reparacion;
+    }
+
+    public void setReparacion(Boolean reparacion) {
+        this.reparacion = reparacion;
+    }
 
     public Boolean getAccidente() {
         return accidente;
@@ -41,9 +51,9 @@ public class Arista extends Line {
     public void setClick(EventHandler<MouseEvent> click) {
         this.click = click;
     }
-    
 
-    private CierreCosevi cierre; 
+    private CierreCosevi cierre;
+
     public Nodo getOrigen() {
         return origen;
     }
@@ -57,14 +67,13 @@ public class Arista extends Line {
         this.setStrokeWidth(10.00);
         this.setStroke(Color.TRANSPARENT);
         this.setOnMouseClicked(click);
-        this.accidente=false;
+        this.accidente = false;
+        this.reparacion = false;
     }
 
     public void setOrigen(Nodo origen) {
         this.origen = origen;
     }
-
-    
 
     public Nodo getDestino() {
         return destino;
@@ -125,20 +134,20 @@ public class Arista extends Line {
             agregarAccidente = false;
             PantPrincipalController.accidentes.add(this);
             PantPrincipalController.imagenesAccidentes.add(accidente);
-            this.accidente=true;
+            this.accidente = true;
             PantPrincipalController.rutaNueva = true;
-        }
-        else if(agregarReparacion){
+        } else if (agregarReparacion) {
             cierre = new CierreCosevi();
-
             Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
-
             cierre.setLayoutX(pMedio.getX() - cierre.getFitHeight() / 2);
             cierre.setLayoutY(pMedio.getY() - cierre.getFitWidth() / 2);
-
             anchorPane.getChildren().add(cierre);
             agregarReparacion = false;
+            PantPrincipalController.imagenesCierres.add(cierre);
+            PantPrincipalController.cierresCosevi.add(cierre);
             PantPrincipalController.rutaNueva = true;
+            this.reparacion = true;
+
         }
     };
 }

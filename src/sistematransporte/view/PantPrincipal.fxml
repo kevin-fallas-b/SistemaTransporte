@@ -17,12 +17,12 @@
       <ImageView id="areaDelimitada" fx:id="ivAreaDelimitada" fitHeight="600.0" fitWidth="422.0" layoutX="24.0" layoutY="10.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Label layoutX="629.0" layoutY="23.0" text="Grafo" />
       <Label layoutX="617.0" layoutY="94.0" text="Algoritmo" />
-      <JFXRadioButton fx:id="rbDirigido" layoutX="507.0" layoutY="40.0" selected="true" text="Dirigido">
+      <JFXRadioButton fx:id="rbDirigido" layoutX="507.0" layoutY="40.0" text="Dirigido">
          <toggleGroup>
             <ToggleGroup fx:id="tgDirigido" />
          </toggleGroup>
       </JFXRadioButton>
-      <JFXRadioButton fx:id="rbNoDirigido" layoutX="697.0" layoutY="40.0" text="No Dirigido" toggleGroup="$tgDirigido" />
+      <JFXRadioButton fx:id="rbNoDirigido" layoutX="697.0" layoutY="40.0" selected="true" text="No Dirigido" toggleGroup="$tgDirigido" />
       <JFXRadioButton fx:id="rbDijkstra" layoutX="507.0" layoutY="103.0" prefWidth="70.0" selected="true" text="Dijkstra">
          <toggleGroup>
             <ToggleGroup fx:id="tgAlogiritmo" />
