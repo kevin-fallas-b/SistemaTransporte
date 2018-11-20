@@ -528,7 +528,7 @@ public class PantPrincipalController extends Controller implements Initializable
                 sb.append(matPeso[i][j]);
                 sb.append("\t");
             }
-            sb.append("\n");
+          //  sb.append("\n");
         }
         System.out.println(sb);
     }
