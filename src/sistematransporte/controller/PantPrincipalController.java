@@ -308,7 +308,6 @@ public class PantPrincipalController extends Controller implements Initializable
                     contDistanciaR = 0;
                     //lbRecorridoFinal.setText(""+contDistanciaR);
                     mapa.getAristas().stream().forEach((t) -> {
-                        
                         t.setStroke(Color.TRANSPARENT);
                     });
                     apCentro.getChildren().remove(carro);

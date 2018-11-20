@@ -19,11 +19,10 @@ import static sistematransporte.controller.PantPrincipalController.anchorPane;
  * @author Kevin F
  */
 public class Arista extends Line {
-
     private Nodo origen;
     private Nodo destino;
     private Integer peso;
-
+    private Accidente accidente;
     public Nodo getOrigen() {
         return origen;
     }
@@ -42,6 +41,14 @@ public class Arista extends Line {
 
     public void setOrigen(Nodo origen) {
         this.origen = origen;
+    }
+
+    public Accidente getAccidente() {
+        return accidente;
+    }
+
+    public void setAccidente(Accidente accidente) {
+        this.accidente = accidente;
     }
 
     public Nodo getDestino() {
@@ -91,9 +98,8 @@ public class Arista extends Line {
     }
 
     EventHandler<MouseEvent> click = (MouseEvent event) -> {
-        System.out.println("CD");
         if (agregarAccidente) {
-            Accidente accidente = new Accidente();
+            accidente = new Accidente();
 
             Point2D pMedio = this.destino.getPuntoMapa().midpoint(this.origen.getPuntoMapa());
 
@@ -103,7 +109,5 @@ public class Arista extends Line {
             anchorPane.getChildren().add(accidente);
             agregarAccidente = false;
         }
-
     };
-
 }
