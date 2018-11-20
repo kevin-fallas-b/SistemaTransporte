@@ -98,7 +98,7 @@ public class PantPrincipalController extends Controller implements Initializable
     private Label lbRecorridoFinal;
     @FXML
     private Label lbTiempo;
-    Boolean enEjecucion = false;
+    private Boolean enEjecucion = false;
 
     /**
      * Initializes the controller class.
