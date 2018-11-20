@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -260,11 +259,11 @@ public class PantPrincipalController extends Controller implements Initializable
         }
         else if(rbTraficoMedio.isSelected())
         {
-            tTrafico =2500;
+            tTrafico =3000;
         }
         else
         {
-            tTrafico =3500;
+            tTrafico =4500;
         }
     }
     private void trazarCarro(Nodo ini, Nodo fin, Vehiculo carro,Arista a) {
