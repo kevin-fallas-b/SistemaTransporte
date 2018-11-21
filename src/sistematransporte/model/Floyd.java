@@ -36,7 +36,7 @@ public class Floyd {
                                     
                                     if(aux<=mady[z][y]){                                        
                                         mady[z][y]=aux;
-                                        mCaminos[z][y] =x;
+                                        mCaminos[z][y] = x;
                                     }
                                 }
                             }                        

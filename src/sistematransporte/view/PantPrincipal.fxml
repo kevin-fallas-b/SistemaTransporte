@@ -48,8 +48,8 @@
          </children>
       </AnchorPane>
       <JFXToggleButton fx:id="tbMostrarArea" layoutX="832.0" layoutY="65.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#presionarToggleArea" prefHeight="58.0" prefWidth="206.0" text="Mostrar Area Delimitada" />
-      <Label layoutX="499.0" layoutY="380.0" text="Costo del viaje:" />
-      <Label fx:id="lbCostoFinal" layoutX="603.0" layoutY="380.0" prefHeight="17.0" prefWidth="79.0" />
+      <Label layoutX="499.0" layoutY="403.0" text="Costo del viaje:" />
+      <Label fx:id="lbCostoFinal" layoutX="603.0" layoutY="403.0" prefHeight="17.0" prefWidth="79.0" />
       <Label layoutX="704.0" layoutY="343.0" text="Distancia estimada::" />
       <Label layoutX="704.0" layoutY="382.0" text="Distancia recorrida:" />
       <Label fx:id="lbRecorridoEstimado" layoutX="856.0" layoutY="343.0" prefHeight="17.0" prefWidth="61.0" />
@@ -58,6 +58,11 @@
       <Label fx:id="lbTiempo" layoutX="646.0" layoutY="342.0" prefHeight="17.0" prefWidth="36.0" />
       <Label fx:id="lbTiempoMin" layoutX="610.0" layoutY="341.0" prefHeight="17.0" prefWidth="30.0" />
       <Label layoutX="641.0" layoutY="342.0" text=":" />
-      <JFXButton fx:id="btnGuardarAristas" disable="true" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" visible="false" />
-   </children>
+
+
+      <Label layoutX="499.0" layoutY="375.0" text="Costo estimado:" />
+      <Label fx:id="lbCostoestimado" layoutX="603.0" layoutY="375.0" prefHeight="17.0" prefWidth="79.0" />
+
+      <JFXButton fx:id="btnGuardarAristas" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" />
+</children>
 </AnchorPane>
