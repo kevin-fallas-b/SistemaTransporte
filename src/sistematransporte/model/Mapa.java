@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
@@ -24,6 +25,7 @@ public class Mapa extends ImageView {
 
     public static final LinkedList<Nodo> destinos = new LinkedList();
     private final LinkedList<Arista> aristas = new LinkedList();
+    private final LinkedList<Nodo> listaDirigida = new LinkedList();
 
     public Mapa() {
         super();
@@ -105,5 +107,35 @@ public class Mapa extends ImageView {
             aristas.add(arista);
         }
     }
+    
+    public void cargarAristasDirigidas() throws FileNotFoundException, IOException {
 
+        BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/AristasDirigidas.txt"));
+        String line = null;
+        ArrayList<Arista> aristas = new ArrayList<Arista>();
+        while ((line = reader.readLine()) != null) {
+            String[] parts;
+            parts = line.split("\\$");
+            Double posx = Double.valueOf(parts[0]);
+            Double posy = Double.valueOf(parts[1]);
+            Double posx2 = Double.valueOf(parts[2]);
+            Double posy2 = Double.valueOf(parts[3]);
+
+            Arista aristaNuevas = new Arista(posx, posy, posx2, posy2);
+            //aristaNuevas.agregarNodos(destinos);
+            aristas.add(aristaNuevas);
+        }
+        
+        /*while(!aristas.isEmpty()){
+            Nodo nodo = aristas.get(0).getOrigen();
+            if(listaDirigida.contains(nodo)){
+                nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
+            }else{
+                nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
+                listaDirigida.add(nodo);                
+            }
+            aristas.remove(0);
+        }*/
+        
+    }
 }

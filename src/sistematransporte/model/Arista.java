@@ -27,6 +27,16 @@ public class Arista extends Line {
     private Integer peso;
     private Boolean accidente;
     private Boolean reparacion;
+    private Integer pesoOriginal;
+
+    public Integer getPesoOriginal() {
+        return pesoOriginal;
+    }
+
+    public void setPesoOriginal(Integer pesoOriginal) {
+        this.pesoOriginal = pesoOriginal;
+    }
+    
 
     public Boolean getReparacion() {
         return reparacion;
@@ -90,7 +100,7 @@ public class Arista extends Line {
     public void setPeso(Integer peso) {
         this.peso = peso;
     }
-
+    
     public void agregarNodos(List<Nodo> nodos) {
 
         Point2D inicio = new Point2D(0, 0);
@@ -119,6 +129,7 @@ public class Arista extends Line {
 
         Double p = inicio.distance(fin);
         this.peso = p.intValue();
+        this.pesoOriginal=this.peso;
     }
 
     EventHandler<MouseEvent> click = (MouseEvent event) -> {
