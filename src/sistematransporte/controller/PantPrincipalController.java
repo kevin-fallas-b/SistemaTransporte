@@ -212,7 +212,6 @@ public class PantPrincipalController extends Controller implements Initializable
 
     public EventHandler<MouseEvent> seleccionarDestino = (MouseEvent event) -> {
         if (!agregarAccidente && !agregarReparacion && !enEjecucion) {
-            //metodo que se encarga de selecionar destinos y llamar
             Double y1 = event.getSceneY() - 10;
             Double y2 = event.getSceneY() + 10;
 
@@ -232,20 +231,13 @@ public class PantPrincipalController extends Controller implements Initializable
                                 lbRecorridoEstimado.setText("");
                             } else {
 
-
                                 if (nodoOrigen == null) {
-                                 nodoOrigen = nodo;
-                                } else {
-                                    /*Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
-                                    Arista aristaDirida = new Arista(x1, y1,nodoOrigen.getCenterX(), nodoOrigen.getCenterY());
-                                    nodoOrigen = null;
-                                    aristasParaGrafoDirigido.add(aristaDirida);
-                                     */
+                                    nodoOrigen = nodo;
                                 }
-
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
                                     if (rbNoDirigido.isSelected()) {
+
                                         if(rbDijkstra.isSelected())
                                         {
                                         GenerarRuta(nodoOrigen, nodo, new Vehiculo());
@@ -253,23 +245,18 @@ public class PantPrincipalController extends Controller implements Initializable
                                         else if(rbFloyd.isSelected())
                                         {
                                            floydWarshal(nodoOrigen, nodo, new Vehiculo());
-                                        }
+
                                         nodoOrigen = null;
                                         enEjecucion = true;
-                                    } else {//aqui es si se esta trabajando con grafo dirigido, recordar cambiar
-                                        if(rbDijkstra.isSelected())
-                                        {
-                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                        }
-                                        else if(rbFloyd.isSelected())
-                                        {
+                                    } else {
+                                        if (rbDijkstra.isSelected()) {
+                                            GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        } else if (rbFloyd.isSelected()) {
                                             floydWarshal(nodoOrigen, nodo, new Vehiculo());
                                         }
                                         nodoOrigen = null;
                                         enEjecucion = true;
                                     }
-
-                                    //int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
                                 }
                             }
                             x1 = x2;
@@ -290,13 +277,16 @@ public class PantPrincipalController extends Controller implements Initializable
         float tem2 = Float.valueOf(lbTiempo.getText()) / 60;
         Float tiempoFin = (tem * valorTiempo) + (tem2 * valorTiempo);
         float valorR = Integer.valueOf(lbRecorridoFinal.getText()) * valorRecorrido;
-        lbCostoFinal.setText("" + (valorR + tiempoFin));
+        lbCostoFinal.setText("" + Math.round(valorR + tiempoFin));
 
     }
- private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro)
- { 
-     GenerarRuta(ini, fin, carro);
- }
+
+
+    private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro) {
+        GenerarRuta(ini, fin, carro);
+    }
+
+
     private void tiempo() {
         timerEnEjecucion = true;
         this.timer = new Timer();
@@ -341,7 +331,7 @@ public class PantPrincipalController extends Controller implements Initializable
             float valTiempo = ((((d.getAux().size() * 1500) + 1500)) / 1000);
             float valTiem = (valTiempo / 60) * 50;
             float cosEstimado = ((conTemp * 4) + valTiem);
-            lbCostoestimado.setText("" + cosEstimado);
+            lbCostoestimado.setText("" + Math.round(cosEstimado));
         }
         ruta.add(ini);
         int cont = 0;
@@ -574,10 +564,11 @@ public class PantPrincipalController extends Controller implements Initializable
         agregarReparacion = true;
         agregarAccidente = false;
     }
-    private void floydWarshall(Integer [][] m,int nodoInicio, int nodoFin)
-    {
-        int vec[]=f.floyd_cam(matPeso, nodoInicio, nodoInicio);
+
+    private void floydWarshall(Integer[][] m, int nodoInicio, int nodoFin) {
+        int vec[] = f.floyd_cam(matPeso, nodoInicio, nodoInicio);
     }
+
     private void llenarMatPeso() {
         StringBuilder sb = new StringBuilder();
         //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
@@ -604,13 +595,14 @@ public class PantPrincipalController extends Controller implements Initializable
             }
             sb.append("\n");
         }
-        //System.out.println(sb);
-
     }
 
     @FXML
     private void presionarBtnGuardarAristas(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
-        PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");
+        
+        //PELIGRO PUEDE BORRAR TODAS LAS ARISTAS, TENER CUIDADO
+        
+        /*PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");
         while (!aristasParaGrafoDirigido.isEmpty()) {
             Arista arista = aristasParaGrafoDirigido.get(0);
             aristasParaGrafoDirigido.remove(0);
@@ -621,7 +613,7 @@ public class PantPrincipalController extends Controller implements Initializable
             String cordenadas = String.valueOf(x1) + "$" + String.valueOf(y1) + "$" + String.valueOf(x2) + "$" + String.valueOf(y2);
             writer.println(cordenadas);
         }
-        writer.close();
+        writer.close();*/
     }
 
     @FXML
