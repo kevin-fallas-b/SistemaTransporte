@@ -232,6 +232,7 @@ public class PantPrincipalController extends Controller implements Initializable
                                 lbRecorridoFinal.setText("");
                                 lbRecorridoEstimado.setText("");
                             } else {
+                                int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
                                 /*System.out.println("X: "+x1+"  Y: "+y1);
                                 if(nodoOrigen == null){
                                     nodoOrigen = nodo;
@@ -247,11 +248,25 @@ public class PantPrincipalController extends Controller implements Initializable
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
                                     if (rbNoDirigido.isSelected()) {
+                                        if(rbDijkstra.isSelected())
+                                        {
                                         GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        }
+                                        else if(rbFloyd.isSelected())
+                                        {
+                                            floydWarshal(nodoOrigen, nodo, new Vehiculo());
+                                        }
                                         nodoOrigen = null;
                                         enEjecucion = true;
                                     } else {//aqui es si se esta trabajando con grafo dirigido, recordar cambiar
+                                        if(rbDijkstra.isSelected())
+                                        {
                                         GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        }
+                                        else if(rbFloyd.isSelected())
+                                        {
+                                            floydWarshal(nodoOrigen, nodo, new Vehiculo());
+                                        }
                                         nodoOrigen = null;
                                         enEjecucion = true;
                                     }
@@ -280,7 +295,10 @@ public class PantPrincipalController extends Controller implements Initializable
         lbCostoFinal.setText("" + (valorR + tiempoFin));
 
     }
-
+ private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro)
+ { System.out.println("entre cebo");
+     GenerarRuta(ini, fin, carro);
+ }
     private void tiempo() {
         timerEnEjecucion = true;
         this.timer = new Timer();
@@ -440,7 +458,7 @@ public class PantPrincipalController extends Controller implements Initializable
                         t.setAccidente(false);
                         t.setReparacion(false);
                         t.setStroke(Color.TRANSPARENT);
-                        t.setStrokeWidth(3);
+                        t.setStrokeWidth(10);
                         t.setPeso(t.getPesoOriginal());
                     });
                     apCentro.getChildren().remove(carro);
@@ -558,7 +576,10 @@ public class PantPrincipalController extends Controller implements Initializable
         agregarReparacion = true;
         agregarAccidente = false;
     }
-
+    private void floydWarshall(Integer [][] m,int nodoInicio, int nodoFin)
+    {
+        int vec[]=f.floyd_cam(matPeso, nodoInicio, nodoInicio);
+    }
     private void llenarMatPeso() {
         StringBuilder sb = new StringBuilder();
         //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
