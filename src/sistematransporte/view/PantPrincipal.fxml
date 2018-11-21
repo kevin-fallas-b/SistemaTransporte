@@ -23,12 +23,12 @@
          </toggleGroup>
       </JFXRadioButton>
       <JFXRadioButton fx:id="rbNoDirigido" layoutX="697.0" layoutY="40.0" selected="true" text="No Dirigido" toggleGroup="$tgDirigido" />
-      <JFXRadioButton fx:id="rbDijkstra" layoutX="507.0" layoutY="103.0" prefWidth="70.0" selected="true" text="Dijkstra">
+      <JFXRadioButton fx:id="rbDijkstra" layoutX="507.0" layoutY="103.0" onAction="#presionarRbDijkstra" prefWidth="70.0" selected="true" text="Dijkstra">
          <toggleGroup>
             <ToggleGroup fx:id="tgAlogiritmo" />
          </toggleGroup>
       </JFXRadioButton>
-      <JFXRadioButton fx:id="rbFloyd" layoutX="697.0" layoutY="103.0" text="Floyd" toggleGroup="$tgAlogiritmo" />
+      <JFXRadioButton fx:id="rbFloyd" layoutX="697.0" layoutY="103.0" onAction="#presionarRbFloyd" text="Floyd" toggleGroup="$tgAlogiritmo" />
       <Label layoutX="619.0" layoutY="237.0" text="Opciones" />
       <JFXButton fx:id="btnAccidente" layoutX="513.0" layoutY="267.0" onAction="#presionarBtnAccidente" text="Accidente" />
       <JFXButton fx:id="btnReparacion" layoutX="697.0" layoutY="267.0" onAction="#presionarBtnReparacion" text="Reparacion Cosevi" />
@@ -40,14 +40,14 @@
       </JFXRadioButton>
       <JFXRadioButton fx:id="rbTraficoAlto" layoutX="697.0" layoutY="185.0" prefHeight="17.0" prefWidth="67.0" text="Alto" toggleGroup="$tgTrafico" />
       <JFXRadioButton fx:id="rbTraficoMedio" layoutX="596.0" layoutY="185.0" prefHeight="17.0" prefWidth="67.0" text="Medio" toggleGroup="$tgTrafico" />
-      <JFXToggleButton fx:id="tbOpcionesDesarrollador" layoutX="837.0" layoutY="3.0" onAction="#presionarTbOpcionesDesarrollador" text="Opciones de Desarrollador" />
+      <JFXToggleButton fx:id="tbOpcionesDesarrollador" layoutX="834.0" layoutY="57.0" onAction="#presionarTbOpcionesDesarrollador" text="Opciones de Desarrollador" visible="false" />
       <AnchorPane fx:id="apOpcionesDes" layoutX="430.0" layoutY="473.0" prefHeight="120.0" prefWidth="601.0">
          <children>
             <JFXButton fx:id="btnCargarNodos" layoutX="406.0" layoutY="61.0" onAction="#presionarBtnCargarNodos" text="Cargar Nodos" />
             <JFXButton fx:id="btnOcultarNodos" layoutX="505.0" layoutY="60.0" onAction="#presionarBtnOcultarNodos" text="Ocultar Nodos" />
          </children>
       </AnchorPane>
-      <JFXToggleButton fx:id="tbMostrarArea" layoutX="832.0" layoutY="65.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#presionarToggleArea" prefHeight="58.0" prefWidth="206.0" text="Mostrar Area Delimitada" />
+      <JFXToggleButton fx:id="tbMostrarArea" layoutX="837.0" layoutY="3.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#presionarToggleArea" prefHeight="58.0" prefWidth="206.0" text="Mostrar Area Delimitada" />
       <Label layoutX="499.0" layoutY="403.0" text="Costo del viaje:" />
       <Label fx:id="lbCostoFinal" layoutX="603.0" layoutY="403.0" prefHeight="17.0" prefWidth="79.0" />
       <Label layoutX="704.0" layoutY="343.0" text="Distancia estimada::" />
@@ -56,13 +56,14 @@
       <Label fx:id="lbRecorridoFinal" layoutX="856.0" layoutY="382.0" prefHeight="17.0" prefWidth="61.0" />
       <Label layoutX="498.0" layoutY="342.0" text="Tiempo en minutos:" />
       <Label fx:id="lbTiempo" layoutX="646.0" layoutY="342.0" prefHeight="17.0" prefWidth="36.0" />
-      <Label fx:id="lbTiempoMin" layoutX="610.0" layoutY="341.0" prefHeight="17.0" prefWidth="30.0" />
+      <Label fx:id="lbTiempoMin" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="610.0" layoutY="342.0" prefHeight="17.0" prefWidth="30.0" />
       <Label layoutX="641.0" layoutY="342.0" text=":" />
+
 
       <Label layoutX="499.0" layoutY="375.0" text="Costo estimado:" />
       <Label fx:id="lbCostoestimado" layoutX="603.0" layoutY="375.0" prefHeight="17.0" prefWidth="79.0" />
 
-      <JFXButton fx:id="btnGuardarAristas" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" />
-
-   </children>
+      <JFXButton fx:id="btnGuardarAristas" disable="true" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" visible="false" />
+      <Label fx:id="lblAlgoritmoActivo" layoutX="549.0" layoutY="434.0" text="Se selecciono el algoritdo de Dijkstra" />
+</children>
 </AnchorPane>

@@ -21,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -129,10 +130,12 @@ public class PantPrincipalController extends Controller implements Initializable
     private Label lbCostoestimado;
 
     public static Timer timer;
-    private LinkedList<Arista> aristasParaGrafoDirigido= new LinkedList<Arista>();
+    private LinkedList<Arista> aristasParaGrafoDirigido = new LinkedList<Arista>();
     @FXML
     private JFXButton btnGuardarAristas;
-
+    @FXML
+    private Label lblAlgoritmoActivo;
+    private Color colorActivo = Color.CORAL;
 
     /**
      * Initializes the controller class.
@@ -143,7 +146,9 @@ public class PantPrincipalController extends Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            lbTiempoMin.setText("0");
+            lblAlgoritmoActivo.setVisible(false);
+            lbTiempoMin.setText("00");
+            lbTiempo.setText("00");
             tbMostrarArea.setSelected(false);
             apCentro.getChildren().remove(ivAreaDelimitada);
             iniciarMapa();
@@ -191,21 +196,15 @@ public class PantPrincipalController extends Controller implements Initializable
 
     }
 
-    public void cargarAristas() {
-        try {
-            mapa.cagarAristas();
+    public void cargarAristas() throws IOException {
+        mapa.cagarAristas();
 
-            mapa.getAristas().stream().forEach((arista) -> {
-                apCentro.getChildren().add(arista);
-            });
-
-            mapa.getDestinos().stream().forEach((nodo) -> {
-                apCentro.getChildren().add(nodo);
-            });
-
-        } catch (IOException ex) {
-            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        mapa.getAristas().stream().forEach((arista) -> {
+            apCentro.getChildren().add(arista);
+        });
+        mapa.getDestinos().stream().forEach((nodo) -> {
+            apCentro.getChildren().add(nodo);
+        });
 
     }
 
@@ -226,25 +225,24 @@ public class PantPrincipalController extends Controller implements Initializable
                             nodo.setFill(Color.AQUA);
                             if (nodoOrigen == null && !enEjecucion) {
                                 nodoOrigen = nodo;
-                                lbTiempoMin.setText("0");
-                                lbTiempo.setText("");
+                                lbTiempoMin.setText("00");
+                                lbTiempo.setText("00");
                                 lbCostoFinal.setText("");
                                 lbRecorridoFinal.setText("");
                                 lbRecorridoEstimado.setText("");
                             } else {
-                                int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
-                                /*System.out.println("X: "+x1+"  Y: "+y1);
-                                if(nodoOrigen == null){
-                                    nodoOrigen = nodo;
-                                }
-                                else
-                                {
-                                    Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
+
+
+                                if (nodoOrigen == null) {
+                                 nodoOrigen = nodo;
+                                } else {
+                                    /*Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
                                     Arista aristaDirida = new Arista(x1, y1,nodoOrigen.getCenterX(), nodoOrigen.getCenterY());
                                     nodoOrigen = null;
                                     aristasParaGrafoDirigido.add(aristaDirida);
-                                }*/
-                                
+                                     */
+                                }
+
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
                                     if (rbNoDirigido.isSelected()) {
@@ -272,7 +270,6 @@ public class PantPrincipalController extends Controller implements Initializable
                                     }
 
                                     //int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
-                                    
                                 }
                             }
                             x1 = x2;
@@ -285,6 +282,7 @@ public class PantPrincipalController extends Controller implements Initializable
             }
         }
     };
+
     private void calcularTarifa() {
         float valorTiempo = 50;
         float valorRecorrido = 4;
@@ -340,10 +338,10 @@ public class PantPrincipalController extends Controller implements Initializable
                 conTemp += t.getPeso();
             }
             lbRecorridoEstimado.setText("" + conTemp);
-            float valTiempo = ((((d.getAux().size()*1500)+1500))/1000);
-            float valTiem = (valTiempo/60)*50;
-            float cosEstimado = ((conTemp*4)+valTiem);
-            lbCostoestimado.setText(""+cosEstimado);
+            float valTiempo = ((((d.getAux().size() * 1500) + 1500)) / 1000);
+            float valTiem = (valTiempo / 60) * 50;
+            float cosEstimado = ((conTemp * 4) + valTiem);
+            lbCostoestimado.setText("" + cosEstimado);
         }
         ruta.add(ini);
         int cont = 0;
@@ -433,7 +431,7 @@ public class PantPrincipalController extends Controller implements Initializable
                     rTrafico = null;
                     contDistanciaR = 0;
                     mapa.getDestinos().stream().forEach((t) -> {
-                        t.setFill(Color.CORAL);
+                        t.setFill(colorActivo);
                     });
                     timer.cancel();
                     timerEnEjecucion = false;
@@ -612,17 +610,76 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void presionarBtnGuardarAristas(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
-       /* PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");        
+        PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");
         while (!aristasParaGrafoDirigido.isEmpty()) {
             Arista arista = aristasParaGrafoDirigido.get(0);
             aristasParaGrafoDirigido.remove(0);
-            Double x1 =arista.getStartX();
+            Double x1 = arista.getStartX();
             Double y1 = arista.getStartY();
-            Double x2 =arista.getEndX();
+            Double x2 = arista.getEndX();
             Double y2 = arista.getEndY();
-            String cordenadas = String.valueOf(x1)+ "$" + String.valueOf(y1)+ "$"+String.valueOf(x2)+"$"+String.valueOf(y2);
+            String cordenadas = String.valueOf(x1) + "$" + String.valueOf(y1) + "$" + String.valueOf(x2) + "$" + String.valueOf(y2);
             writer.println(cordenadas);
         }
-        writer.close();*/
+        writer.close();
+    }
+
+    @FXML
+    private void presionarRbDijkstra(ActionEvent event) {
+        if (enEjecucion) {
+            rbFloyd.setSelected(true);
+            rbDijkstra.setSelected(false);
+        } else {
+            colorActivo = Color.TRANSPARENT;
+            mapa.getDestinos().stream().forEach((t) -> {
+                t.setFill(colorActivo);
+            });
+            lblAlgoritmoActivo.setText("Se selecciono el algoritdo de Dijkstra");
+            lblAlgoritmoActivo.setVisible(true);
+            FadeTransition ft = new FadeTransition(Duration.millis(750), lblAlgoritmoActivo);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.setAutoReverse(true);
+            ft.setCycleCount(4);
+            ft.setOnFinished((event1) -> {
+                lblAlgoritmoActivo.setVisible(false);
+                colorActivo = Color.CORAL;
+                mapa.getDestinos().stream().forEach((t) -> {
+                    t.setFill(colorActivo);
+                });
+            });
+            ft.play();
+
+        }
+    }
+
+    @FXML
+    private void presionarRbFloyd(ActionEvent event
+    ) {
+        if (enEjecucion) {
+            rbFloyd.setSelected(false);
+            rbDijkstra.setSelected(true);
+        } else {
+            colorActivo = Color.TRANSPARENT;
+            mapa.getDestinos().stream().forEach((t) -> {
+                t.setFill(colorActivo);
+            });
+            lblAlgoritmoActivo.setText("Se selecciono el algoritdo de Floyd");
+            lblAlgoritmoActivo.setVisible(true);
+            FadeTransition ft = new FadeTransition(Duration.millis(750), lblAlgoritmoActivo);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.setAutoReverse(true);
+            ft.setCycleCount(4);
+            ft.setOnFinished((event1) -> {
+                lblAlgoritmoActivo.setVisible(false);
+                colorActivo = Color.DARKMAGENTA;
+                mapa.getDestinos().stream().forEach((t) -> {
+                    t.setFill(colorActivo);
+                });
+            });
+            ft.play();
+
+        }
     }
 }
