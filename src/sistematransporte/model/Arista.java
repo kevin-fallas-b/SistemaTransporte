@@ -122,11 +122,6 @@ public class Arista extends Line {
                 aux2 = nodo;
             }
         }
-
-        //aux.getNodosAdyacentes().add(aux2);
-
-        //aux2.getNodosAdyacentes().add(aux);
-
         Double p = inicio.distance(fin);
         this.peso = p.intValue();
         this.pesoOriginal=this.peso;

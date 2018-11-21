@@ -232,9 +232,8 @@ public class PantPrincipalController extends Controller implements Initializable
                                 lbRecorridoEstimado.setText("");
                             } else {
 
-
                                 if (nodoOrigen == null) {
-                                 nodoOrigen = nodo;
+                                    nodoOrigen = nodo;
                                 } else {
                                     /*Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
                                     Arista aristaDirida = new Arista(x1, y1,nodoOrigen.getCenterX(), nodoOrigen.getCenterY());
@@ -246,23 +245,17 @@ public class PantPrincipalController extends Controller implements Initializable
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
                                     if (rbNoDirigido.isSelected()) {
-                                        if(rbDijkstra.isSelected())
-                                        {
-                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                        }
-                                        else if(rbFloyd.isSelected())
-                                        {
+                                        if (rbDijkstra.isSelected()) {
+                                            GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        } else if (rbFloyd.isSelected()) {
                                             floydWarshal(nodoOrigen, nodo, new Vehiculo());
                                         }
                                         nodoOrigen = null;
                                         enEjecucion = true;
                                     } else {//aqui es si se esta trabajando con grafo dirigido, recordar cambiar
-                                        if(rbDijkstra.isSelected())
-                                        {
-                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                        }
-                                        else if(rbFloyd.isSelected())
-                                        {
+                                        if (rbDijkstra.isSelected()) {
+                                            GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        } else if (rbFloyd.isSelected()) {
                                             floydWarshal(nodoOrigen, nodo, new Vehiculo());
                                         }
                                         nodoOrigen = null;
@@ -290,13 +283,14 @@ public class PantPrincipalController extends Controller implements Initializable
         float tem2 = Float.valueOf(lbTiempo.getText()) / 60;
         Float tiempoFin = (tem * valorTiempo) + (tem2 * valorTiempo);
         float valorR = Integer.valueOf(lbRecorridoFinal.getText()) * valorRecorrido;
-        lbCostoFinal.setText("" + (valorR + tiempoFin));
+        lbCostoFinal.setText("" + Math.round(valorR + tiempoFin));
 
     }
- private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro)
- { System.out.println("entre cebo");
-     GenerarRuta(ini, fin, carro);
- }
+
+    private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro) {
+        GenerarRuta(ini, fin, carro);
+    }
+
     private void tiempo() {
         timerEnEjecucion = true;
         this.timer = new Timer();
@@ -341,7 +335,7 @@ public class PantPrincipalController extends Controller implements Initializable
             float valTiempo = ((((d.getAux().size() * 1500) + 1500)) / 1000);
             float valTiem = (valTiempo / 60) * 50;
             float cosEstimado = ((conTemp * 4) + valTiem);
-            lbCostoestimado.setText("" + cosEstimado);
+            lbCostoestimado.setText("" + Math.round(cosEstimado));
         }
         ruta.add(ini);
         int cont = 0;
@@ -574,10 +568,11 @@ public class PantPrincipalController extends Controller implements Initializable
         agregarReparacion = true;
         agregarAccidente = false;
     }
-    private void floydWarshall(Integer [][] m,int nodoInicio, int nodoFin)
-    {
-        int vec[]=f.floyd_cam(matPeso, nodoInicio, nodoInicio);
+
+    private void floydWarshall(Integer[][] m, int nodoInicio, int nodoFin) {
+        int vec[] = f.floyd_cam(matPeso, nodoInicio, nodoInicio);
     }
+
     private void llenarMatPeso() {
         StringBuilder sb = new StringBuilder();
         //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
