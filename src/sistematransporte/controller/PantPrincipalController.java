@@ -119,6 +119,8 @@ public class PantPrincipalController extends Controller implements Initializable
     private Floyd f = new Floyd();
 
     public static Boolean rutaNueva = false;
+    @FXML
+    private Label lbCostoestimado;
 
 
     /**
@@ -265,7 +267,7 @@ public class PantPrincipalController extends Controller implements Initializable
                     lbTiempo.setText(String.valueOf(tic));
                     tic++;
                     if (tic > 60) {
-                        lbTiempoMin.setText(String.valueOf(min) + ":");
+                        lbTiempoMin.setText(String.valueOf(min));
                         min++;
                         tic = 0;
                     }
@@ -292,6 +294,10 @@ public class PantPrincipalController extends Controller implements Initializable
                 conTemp += t.getPeso();
             }
             lbRecorridoEstimado.setText("" + conTemp);
+            float valTiempo = ((((d.getAux().size()*1500)+1500))/1000);
+            float valTiem = (valTiempo/60)*50;
+            float cosEstimado = ((conTemp*4)+valTiem);
+            lbCostoestimado.setText(""+cosEstimado);
         }
         ruta.add(ini);
         int cont = 0;
@@ -531,6 +537,7 @@ public class PantPrincipalController extends Controller implements Initializable
         for (int i = 0; i < mapa.getDestinos().size(); i++) {
             Nodo aux = mapa.getDestinos().get(i);//Ubicamos el nodo con el que vamos a comparar
             for (int j = 0; j < mapa.getDestinos().size(); j++) {
+                matPeso[i][j] = 10000;
                 if (i != j) {// Si no se esta ubicado en la diagonal
                     Nodo aux2 = mapa.getDestinos().get(j);
 
@@ -540,10 +547,6 @@ public class PantPrincipalController extends Controller implements Initializable
                             matPeso[i][j] = arista.getPeso();
                         }
                     }
-                    //Si no se encontro la arista con los nodos auxiliares se llena la matriz con un peso 0
-                    if(matPeso[i][j] == null) {
-                        matPeso[i][j] = 10000;
-                    }
                 } //Si es la diagonal se llena la matriz con peso 0
                 else {
                     matPeso[i][j] = 0;
@@ -551,8 +554,8 @@ public class PantPrincipalController extends Controller implements Initializable
                 sb.append(matPeso[i][j]);
                 sb.append("\t");
             }
-          //  sb.append("\n");
+            sb.append("\n");
         }
-        System.out.println(sb);
+        //System.out.println(sb);
     }
 }
