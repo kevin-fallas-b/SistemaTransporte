@@ -225,17 +225,6 @@ public class PantPrincipalController extends Controller implements Initializable
                                     GenerarRuta(nodoOrigen, nodo, new Vehiculo());
                                     nodoOrigen = null;
                                     enEjecucion = true;
-
-                                    if (rbNoDirigido.isSelected()) {
-                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                        nodoOrigen = null;
-                                        enEjecucion = true;
-                                    }else{//aqui es si se esta trabajando con grafo dirigido, recordar cambiar
-                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                        nodoOrigen = null;
-                                        enEjecucion = true;
-                                    }
-
                                 }
                             }
                             x1 = x2;
