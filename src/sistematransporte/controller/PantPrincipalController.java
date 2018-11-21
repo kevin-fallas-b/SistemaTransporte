@@ -10,10 +10,10 @@ import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,13 +38,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import model.Floyd;
 import sistematransporte.model.Accidente;
 import sistematransporte.model.Arista;
 import sistematransporte.model.CierreCosevi;
 import sistematransporte.model.Dijsktra;
+import sistematransporte.model.Floyd;
 import sistematransporte.model.Mapa;
-import static sistematransporte.model.Mapa.destinos;
 import sistematransporte.model.Nodo;
 import sistematransporte.model.Vehiculo;
 import sistematransporte.util.Mensaje;
@@ -121,9 +120,6 @@ public class PantPrincipalController extends Controller implements Initializable
     public static ArrayList<CierreCosevi> imagenesCierres = new ArrayList();
     public static ArrayList<Arista> auxAristas;
     public static Boolean timerEnEjecucion = false;
-
-    private Floyd f = new Floyd();
-
     public static Boolean rutaNueva = false;
 
     @FXML
@@ -309,43 +305,90 @@ public class PantPrincipalController extends Controller implements Initializable
 
     private void GenerarRuta(Nodo ini, Nodo fin, Vehiculo carro) {
         ruta.clear();
-        rutaConAristasAlrevez.clear();
-        Dijsktra d = new Dijsktra(mapa);
-        d.ejecutar(ini);
-        d.marcarRutaCorta(fin, Color.BLACK);
-        int conTemp = 0;
-        rutaConAristasAlrevez = d.getAux();
-
-        if (ini.equals(nodoOrigen)) {
-            tiempo();
-            for (Arista t : d.getAux()) {
-                conTemp += t.getPeso();
-            }
-            lbRecorridoEstimado.setText("" + conTemp);
-            float valTiempo = ((((d.getAux().size() * 1500) + 1500)) / 1000);
-            float valTiem = (valTiempo / 60) * 50;
-            float cosEstimado = ((conTemp * 4) + valTiem);
-            lbCostoestimado.setText("" + Math.round(cosEstimado));
-        }
-        ruta.add(ini);
-        int cont = 0;
-
-        for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
-            Arista arista = rutaConAristasAlrevez.get(i);
-            if (ruta.get(cont) == arista.getDestino()) {
-                ruta.add(arista.getOrigen());
-            } else {
-                ruta.add(arista.getDestino());
-            }
-            cont++;
-        }
-
         Arista aristaAux = null;
-        if (!d.getAux().isEmpty()) {
-            aristaAux = rutaConAristasAlrevez.get(rutaConAristasAlrevez.size() - 1);
-        }
 
-        trazarCarro(ini, fin, carro, aristaAux);
+        if (rbDijkstra.isSelected()) {
+            rutaConAristasAlrevez.clear();
+            Dijsktra d = new Dijsktra(mapa);
+            d.ejecutar(ini);
+            d.marcarRutaCorta(fin, Color.BLACK);
+            int conTemp = 0;
+            if (ini.equals(nodoOrigen)) {
+                tiempo();
+                for (Arista t : d.getAux()) {
+                    conTemp += t.getPeso();
+                }
+                lbRecorridoEstimado.setText("" + conTemp);
+                float valTiempo = ((((d.getAux().size() * 1500) + 1500)) / 1000);
+                float valTiem = (valTiempo / 60) * 50;
+                float cosEstimado = ((conTemp * 4) + valTiem);
+                lbCostoestimado.setText("" + Math.round(cosEstimado));
+            }
+
+            rutaConAristasAlrevez = d.getAux();
+
+            ruta.add(ini);
+            int cont = 0;
+
+            for (int i = rutaConAristasAlrevez.size() - 1; i >= 0; i--) {
+                Arista arista = rutaConAristasAlrevez.get(i);
+                if (ruta.get(cont) == arista.getDestino()) {
+                    ruta.add(arista.getOrigen());
+                } else {
+                    ruta.add(arista.getDestino());
+                }
+                cont++;
+            }
+
+            if (!d.getAux().isEmpty()) {
+                aristaAux = rutaConAristasAlrevez.get(rutaConAristasAlrevez.size() - 1);
+            }
+
+            trazarCarro(ini, fin, carro, aristaAux);
+        } else {//aqui para abajo es que esta selecionado floyd
+            
+            Floyd f = new Floyd(mapa);
+            f.floyd_cam(matPeso, ini.getNumNodo(), fin.getNumNodo());
+            f.marcarRuta();
+            ArrayList<Arista> rutaRecibidaDeFloyd = f.getAristaRuta();
+            for (Arista arista : rutaRecibidaDeFloyd) {
+                ruta.add(arista.getOrigen());
+            }
+            ruta.add(ini);
+            int conTemp = 0;
+            if (ini.equals(nodoOrigen)) {
+                tiempo();
+                for (Arista t : rutaRecibidaDeFloyd) {
+                    conTemp += t.getPeso();
+                }
+                lbRecorridoEstimado.setText("" + conTemp);
+                float valTiempo = ((((rutaRecibidaDeFloyd.size() * 1500) + 1500)) / 1000);
+                float valTiem = (valTiempo / 60) * 50;
+                float cosEstimado = ((conTemp * 4) + valTiem);
+                lbCostoestimado.setText("" + Math.round(cosEstimado));
+            }
+
+            /*if (!rutaRecibidaDeFloyd.isEmpty()) {
+                Nodo nod1 = ruta.get(0);
+                Nodo nod2 = ruta.get(1);
+                if (nod2 != null) {
+                    for (Arista y : mapa.getAristas()) {
+                        if ((nod1.equals(y.getDestino()) && nod2.equals(y.getOrigen())) || (nod1.equals(y.getOrigen()) && nod2.equals(y.getDestino()))) {
+                            aristaAux = y;
+                        }
+                    }
+                    
+                    //System.out.println("Arista AUX PESO : "+aristaAux.getPeso());
+                    trazarCarro(ini, fin, carro, aristaAux);
+                    rutaRecibidaDeFloyd.remove(0);
+                }
+            }*/
+            if (!rutaRecibidaDeFloyd.isEmpty()) {
+                aristaAux = rutaRecibidaDeFloyd.get(0);
+                
+            }
+            trazarCarro(ini, fin, carro, aristaAux);
+        }
     }
 
     private int contDistanciaR = 0;
@@ -559,10 +602,9 @@ public class PantPrincipalController extends Controller implements Initializable
         agregarAccidente = false;
     }
 
-    private void floydWarshall(Integer[][] m, int nodoInicio, int nodoFin) {
+    /*private void floydWarshall(Integer[][] m, int nodoInicio, int nodoFin) {
         int vec[] = f.floyd_cam(matPeso, nodoInicio, nodoInicio);
-    }
-
+    }*/
     private void llenarMatPeso() {
         StringBuilder sb = new StringBuilder();
         //Se crea una matriz cuadrada del tamanno del tamano de los nodos totales
@@ -593,9 +635,8 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void presionarBtnGuardarAristas(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
-        
+
         //PELIGRO PUEDE BORRAR TODAS LAS ARISTAS, TENER CUIDADO
-        
         /*PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");
         while (!aristasParaGrafoDirigido.isEmpty()) {
             Arista arista = aristasParaGrafoDirigido.get(0);

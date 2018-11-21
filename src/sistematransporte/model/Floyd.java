@@ -3,85 +3,115 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package sistematransporte.model;
 
-import java.util.PriorityQueue;
-import java.util.Stack;
+import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class Floyd {
 
+    private ArrayList<Integer> rutInteger = new ArrayList<>();
+    private ArrayList<Nodo> nodosRuta = new ArrayList<>();
+    private ArrayList<Arista> aristaRuta = new ArrayList<>();
+    private Mapa grafo;
 
-    public Floyd() {
+    public Floyd(Mapa grafo) {
+        this.grafo = grafo;
     }
-    
-    public int [] floyd_cam(Integer[][] mady,int ini, int fin){
 
-    //RutaCorta ruta;
-    int aux;
-    Integer mCaminos[][] = new Integer[mady.length][mady.length];
+    public ArrayList <Integer> floyd_cam(Integer[][] mady, int ini, int fin) {
 
-        for(int x= 0; x < mady.length;x++){
-            for(int y = 0; y < mady.length;y++){
+        int aux;
+
+        Integer mCaminos[][] = new Integer[mady.length][mady.length];
+        Integer mAux[][] = new Integer[mady.length][mady.length];
+        for (int x = 0; x < mady.length; x++) {
+            for (int y = 0; y < mady.length; y++) {
                 mCaminos[y][x] = y;
+                mAux[x][y] = mady[x][y];
             }
         }
-        
-                for(int x = 0; x < mady.length;x++){
-                    for(int y = 0; y < mady.length; y++){
-                        if(x!=y){
-                            for(int z = 0; z < mady.length;z++)
-                            {
-                                if(z!=x){
-                                    aux=mady[x][y]+mady[z][x];
-                                    
-                                    if(aux<=mady[z][y]){                                        
-                                        mady[z][y]=aux;
-                                        mCaminos[z][y] = x;
-                                    }
-                                }
-                            }                        
+
+        for (int x = 0; x < mady.length; x++) {
+            for (int y = 0; y < mady.length; y++) {
+                if (x != y) {
+                    for (int z = 0; z < mady.length; z++) {
+                        if (z != x) {
+                            aux = mAux[x][y] + mAux[z][x];
+                            if (aux < mAux[z][y]) {
+                                mAux[z][y] = aux;
+                                mCaminos[z][y] = x;
+                            }
                         }
                     }
                 }
-
-                //imprimir(mady);
-                //imprimir(mCaminos);
-                int[] saltos=recorrido( mady, mCaminos, ini, fin);
-                //ruta= new RutaCorta(mady[ini][fin],saltos.length-2,0,saltos);
-                System.out.println("saltos tamaño "+saltos.length);
-                for(int i = 0; i< saltos.length;i++)
-                {
-                    System.out.println("camino " +saltos[i] );
-                }
-                return saltos;
-}
-    
-public int[] recorrido(Integer[][] mPesos, Integer [][] mRecorrido, int ini, int fin){
-
-    Stack<Integer> pila = new Stack<>();
-    Integer[][] recorrido = mRecorrido;
-    int[] nodos;
-    int i=fin;
-    int j=ini;
-    int cont=0;
-    pila.add(ini);
-    while(recorrido[i][j]!=j){
-       pila.push(recorrido[i][j]);
-       j =recorrido[i][j];
-        cont++;
-    }
-    nodos=new int[cont+1];
-    cont=0;
-      while(!pila.isEmpty()){
-        
-            nodos[cont]=pila.pop();
-			cont++;
+            }
         }
 
-    return nodos;
-}
-    
-}
+        recuperaCamino(ini, fin, mCaminos);
 
-    
+        rutInteger.stream().forEach((y) -> {
+            grafo.getDestinos().stream().forEach((t) -> {
+                if (t.getNumNodo().equals(y)) {
+                    t.setMarca(true);
+                    nodosRuta.add(t);
+                }
+            });
+        });
 
+        grafo.getAristas().stream().forEach((t) -> {
+            nodosRuta.stream().forEach((y) -> {
+                int i = nodosRuta.indexOf(y) + 1;
+                if (i < nodosRuta.size()) {
+                    Nodo auxNodo = nodosRuta.get(i);
+                    if (auxNodo.equals(t.getDestino()) && y.equals(t.getOrigen()) || auxNodo.equals(t.getOrigen()) && y.equals(t.getDestino())){
+                        aristaRuta.add(t); 
+                    }
+                }
+            });
+        });
+        
+        return rutInteger;
+        
+    }
+
+    public void recuperaCamino(int i, int j, Integer[][] mRecorrido) {
+        rutInteger.add(i);
+        recupera(i, j, mRecorrido);
+        rutInteger.add(j);
+    }
+
+    public void recupera(int i, int j, Integer[][] mRecorrido) {
+        int k = mRecorrido[i][j];
+        if (k != i) {
+            recupera(i, k, mRecorrido);
+            System.out.println(k);
+            rutInteger.add(k);
+            recupera(k, j, mRecorrido);
+        }
+    }
+
+    public void marcarRuta() {
+        aristaRuta.stream().forEach((t) -> {
+            t.setStroke(Color.BLACK);
+            t.setStrokeWidth(5);
+        });
+    }
+
+    public ArrayList<Nodo> getNodosRuta() {
+        return nodosRuta;
+    }
+
+    public void setNodosRuta(ArrayList<Nodo> nodosRuta) {
+        this.nodosRuta = nodosRuta;
+    }
+
+    public ArrayList<Arista> getAristaRuta() {
+        return aristaRuta;
+    }
+
+    public void setAristaRuta(ArrayList<Arista> aristaRuta) {
+        this.aristaRuta = aristaRuta;
+    }
+
+}
