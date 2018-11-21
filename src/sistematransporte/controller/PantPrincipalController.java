@@ -304,10 +304,10 @@ public class PantPrincipalController extends Controller implements Initializable
     }
 
     private void GenerarRuta(Nodo ini, Nodo fin, Vehiculo carro) {
-        ruta.clear();
-        Arista aristaAux = null;
 
-        if (rbDijkstra.isSelected()) {
+        if (rbDijkstra.isSelected() || rbFloyd.isSelected()) {
+            ruta.clear();
+            Arista aristaAux = null;
             rutaConAristasAlrevez.clear();
             Dijsktra d = new Dijsktra(mapa);
             d.ejecutar(ini);
@@ -346,10 +346,12 @@ public class PantPrincipalController extends Controller implements Initializable
 
             trazarCarro(ini, fin, carro, aristaAux);
         } else {//aqui para abajo es que esta selecionado floyd
-            
+
             Floyd f = new Floyd(mapa);
             f.floyd_cam(matPeso, ini.getNumNodo(), fin.getNumNodo());
             f.marcarRuta();
+            ruta.clear();
+            Arista aristaAux = null;
             ArrayList<Arista> rutaRecibidaDeFloyd = f.getAristaRuta();
             for (Arista arista : rutaRecibidaDeFloyd) {
                 ruta.add(arista.getOrigen());
@@ -368,7 +370,7 @@ public class PantPrincipalController extends Controller implements Initializable
                 lbCostoestimado.setText("" + Math.round(cosEstimado));
             }
 
-            /*if (!rutaRecibidaDeFloyd.isEmpty()) {
+            if (!rutaRecibidaDeFloyd.isEmpty()) {
                 Nodo nod1 = ruta.get(0);
                 Nodo nod2 = ruta.get(1);
                 if (nod2 != null) {
@@ -377,15 +379,15 @@ public class PantPrincipalController extends Controller implements Initializable
                             aristaAux = y;
                         }
                     }
-                    
+
                     //System.out.println("Arista AUX PESO : "+aristaAux.getPeso());
                     trazarCarro(ini, fin, carro, aristaAux);
                     rutaRecibidaDeFloyd.remove(0);
                 }
-            }*/
+            }
             if (!rutaRecibidaDeFloyd.isEmpty()) {
                 aristaAux = rutaRecibidaDeFloyd.get(0);
-                
+
             }
             trazarCarro(ini, fin, carro, aristaAux);
         }
