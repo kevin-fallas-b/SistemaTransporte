@@ -37,6 +37,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import model.Floyd;
 import sistematransporte.model.Accidente;
 import sistematransporte.model.Arista;
 import sistematransporte.model.CierreCosevi;
@@ -119,11 +120,15 @@ public class PantPrincipalController extends Controller implements Initializable
     public static ArrayList<CierreCosevi> imagenesCierres = new ArrayList();
     public static ArrayList<Arista> auxAristas;
     public static Boolean timerEnEjecucion = false;
+
+    private Floyd f = new Floyd();
+
     public static Boolean rutaNueva = false;
     public static Timer timer;
     private LinkedList<Arista> aristasParaGrafoDirigido= new LinkedList<Arista>();
     @FXML
     private JFXButton btnGuardarAristas;
+
 
     /**
      * Initializes the controller class.
@@ -246,6 +251,9 @@ public class PantPrincipalController extends Controller implements Initializable
                                         nodoOrigen = null;
                                         enEjecucion = true;
                                     }
+
+                                    int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
+                                    
                                 }
                             }
                             x1 = x2;
@@ -561,8 +569,8 @@ public class PantPrincipalController extends Controller implements Initializable
                         }
                     }
                     //Si no se encontro la arista con los nodos auxiliares se llena la matriz con un peso 0
-                    if (matPeso[i][j] == null) {
-                        matPeso[i][j] = 0;
+                    if(matPeso[i][j] == null) {
+                        matPeso[i][j] = 10000;
                     }
                 } //Si es la diagonal se llena la matriz con peso 0
                 else {
@@ -571,8 +579,9 @@ public class PantPrincipalController extends Controller implements Initializable
                 sb.append(matPeso[i][j]);
                 sb.append("\t");
             }
-            sb.append("\n");
+          //  sb.append("\n");
         }
+        System.out.println(sb);
     }
 
     @FXML

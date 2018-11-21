@@ -3,16 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package util;
+package model;
 
 import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class Floyd {
-    public int [] floyd_cam(int[][] mady,int ini, int fin){
+
+
+    public Floyd() {
+    }
+    
+    public int [] floyd_cam(Integer[][] mady,int ini, int fin){
+
     //RutaCorta ruta;
     int aux;
-    int mCaminos[][] = new int[mady.length][mady.length];
+    Integer mCaminos[][] = new Integer[mady.length][mady.length];
 
         for(int x= 0; x < mady.length;x++){
             for(int y = 0; y < mady.length;y++){
@@ -42,13 +48,18 @@ public class Floyd {
                 //imprimir(mCaminos);
                 int[] saltos=recorrido( mady, mCaminos, ini, fin);
                 //ruta= new RutaCorta(mady[ini][fin],saltos.length-2,0,saltos);
+                System.out.println("saltos tamaño "+saltos.length);
+                for(int i = 0; i< saltos.length;i++)
+                {
+                    System.out.println("camino " +saltos[i] );
+                }
                 return saltos;
 }
     
-public int[] recorrido(int[][] mPesos, int [][] mRecorrido, int ini, int fin){
+public int[] recorrido(Integer[][] mPesos, Integer [][] mRecorrido, int ini, int fin){
 
     Stack<Integer> pila = new Stack<>();
-    int[][] recorrido = mRecorrido;
+    Integer[][] recorrido = mRecorrido;
     int[] nodos;
     int i=fin;
     int j=ini;
@@ -69,6 +80,7 @@ public int[] recorrido(int[][] mPesos, int [][] mRecorrido, int ini, int fin){
             nodos[cont]=pila.pop();
 			cont++;
         }
+
     return nodos;
 }
     
