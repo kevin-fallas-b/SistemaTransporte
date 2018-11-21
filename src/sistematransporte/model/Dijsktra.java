@@ -6,7 +6,6 @@
 package sistematransporte.model;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javafx.scene.paint.Color;
 import sistematransporte.controller.PantPrincipalController;

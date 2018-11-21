@@ -64,11 +64,8 @@ public int[] recorrido(Integer[][] mPesos, Integer [][] mRecorrido, int ini, int
     int i=fin;
     int j=ini;
     int cont=0;
-
-    //System.out.print("ini "+ini+" fin= "+fin);
     pila.add(ini);
     while(recorrido[i][j]!=j){
-       //System.out.print(" "+recorrido[i][j]+" ");
        pila.push(recorrido[i][j]);
        j =recorrido[i][j];
         cont++;
