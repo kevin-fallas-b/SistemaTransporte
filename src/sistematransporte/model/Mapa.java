@@ -23,9 +23,13 @@ import javafx.scene.paint.Color;
  */
 public class Mapa extends ImageView {
 
-    public static final LinkedList<Nodo> destinos = new LinkedList();
+    public static LinkedList<Nodo> destinos = new LinkedList();
     private final LinkedList<Arista> aristas = new LinkedList();
-    private final LinkedList<Nodo> listaDirigida = new LinkedList();
+    private LinkedList<Nodo> listaDirigida = new LinkedList();
+
+    public LinkedList<Nodo> getListaDirigida() {
+        return listaDirigida;
+    }
 
     public Mapa() {
         super();
@@ -109,7 +113,6 @@ public class Mapa extends ImageView {
     }
 
     public void cargarAristasDirigidas() throws FileNotFoundException, IOException {
-
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/AristasDirigidas.txt"));
         String line = null;
         ArrayList<Arista> aristas = new ArrayList<Arista>();
@@ -121,22 +124,35 @@ public class Mapa extends ImageView {
             Double posx2 = Double.valueOf(parts[2]);
             Double posy2 = Double.valueOf(parts[3]);
 
-            Arista aristaNuevas = new Arista(posx, posy, posx2, posy2);
-            aristaNuevas.setOrigen(identificarNodo(posx, posy));
-            aristaNuevas.setDestino(identificarNodo(posx2, posy2));
+            Arista aristaNuevas = new Arista(posx2, posy2, posx, posy);
+            aristaNuevas.setDestino(identificarNodo(posx, posy));
+            aristaNuevas.setOrigen(identificarNodo(posx2, posy2));
             aristas.add(aristaNuevas);
-        }
 
-        while(!aristas.isEmpty()){
+        }
+        while (!aristas.isEmpty()) {
             Nodo nodo = aristas.get(0).getOrigen();
-            if(listaDirigida.contains(nodo)){
-                nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
-            }else{
-                nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
-                listaDirigida.add(nodo);                
+            if (listaDirigida.contains(nodo)) {
+                if (!nodo.getNodosAdyacentes().contains(aristas.get(0).getDestino()) && aristas.get(0).getDestino() != nodo) {
+                    nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
+                }
+            } else {
+                if (!nodo.getNodosAdyacentes().contains(aristas.get(0).getDestino()) && aristas.get(0).getDestino() != nodo) {
+                    nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
+                }
+                listaDirigida.add(nodo);
             }
             aristas.remove(0);
         }
+
+        //imprimir lista de adyacentes dirigida
+        for (int i = 0; i < listaDirigida.size(); i++) {
+            System.out.println("          NODO NUM     " + listaDirigida.get(i).getNumNodo() + " CONTIENE DESTINOS A: ");
+            for (Nodo nodo : listaDirigida.get(i).getNodosAdyacentes()) {
+                System.out.println(nodo.getNumNodo());
+            }
+        }
+        destinos=listaDirigida;
     }
 
     private Nodo identificarNodo(Double x, Double y) {

@@ -58,6 +58,6 @@
       <Label fx:id="lbTiempo" layoutX="646.0" layoutY="342.0" prefHeight="17.0" prefWidth="36.0" />
       <Label fx:id="lbTiempoMin" layoutX="610.0" layoutY="341.0" prefHeight="17.0" prefWidth="30.0" />
       <Label layoutX="641.0" layoutY="342.0" text=":" />
-      <JFXButton fx:id="btnGuardarAristas" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" />
+      <JFXButton fx:id="btnGuardarAristas" disable="true" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" visible="false" />
    </children>
 </AnchorPane>

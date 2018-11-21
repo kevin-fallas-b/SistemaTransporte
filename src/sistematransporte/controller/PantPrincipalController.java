@@ -187,21 +187,19 @@ public class PantPrincipalController extends Controller implements Initializable
 
     }
 
-    public void cargarAristas() {
-        try {
-            mapa.cagarAristas();
-
-            mapa.getAristas().stream().forEach((arista) -> {
-                apCentro.getChildren().add(arista);
-            });
-
-            mapa.getDestinos().stream().forEach((nodo) -> {
-                apCentro.getChildren().add(nodo);
-            });
-
-        } catch (IOException ex) {
-            Logger.getLogger(PantPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void cargarAristas() throws IOException {
+       mapa.cagarAristas();
+        
+       mapa.getAristas().stream().forEach((arista) -> {
+            apCentro.getChildren().add(arista);
+        });
+        mapa.getDestinos().stream().forEach((nodo) -> {
+            Label label = new Label(String.valueOf(nodo.getAristasAdyacentes().size()));
+            label.setLayoutX(nodo.getCenterX());
+            label.setLayoutY(nodo.getCenterY());
+            apCentro.getChildren().add(nodo);
+            apCentro.getChildren().add(label);
+        });
 
     }
 
@@ -222,23 +220,25 @@ public class PantPrincipalController extends Controller implements Initializable
                             nodo.setFill(Color.AQUA);
                             if (nodoOrigen == null && !enEjecucion) {
                                 nodoOrigen = nodo;
+                                System.out.println("nodo num: "+nodo.getNumNodo());
                                 lbTiempoMin.setText("0");
                                 lbTiempo.setText("");
                                 lbCostoFinal.setText("");
                                 lbRecorridoFinal.setText("");
                                 lbRecorridoEstimado.setText("");
                             } else {
-                                /*System.out.println("X: "+x1+"  Y: "+y1);
+                                System.out.println("X: "+x1+"  Y: "+y1);
                                 if(nodoOrigen == null){
                                     nodoOrigen = nodo;
                                 }
                                 else
                                 {
-                                    Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
+                                  /*Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
                                     Arista aristaDirida = new Arista(x1, y1,nodoOrigen.getCenterX(), nodoOrigen.getCenterY());
                                     nodoOrigen = null;
                                     aristasParaGrafoDirigido.add(aristaDirida);
-                                }*/
+                                */}
+                                System.out.println("nodo num: "+nodo.getNumNodo());
                                 
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
@@ -586,7 +586,7 @@ public class PantPrincipalController extends Controller implements Initializable
 
     @FXML
     private void presionarBtnGuardarAristas(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
-       /* PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");        
+       PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");        
         while (!aristasParaGrafoDirigido.isEmpty()) {
             Arista arista = aristasParaGrafoDirigido.get(0);
             aristasParaGrafoDirigido.remove(0);
@@ -597,6 +597,6 @@ public class PantPrincipalController extends Controller implements Initializable
             String cordenadas = String.valueOf(x1)+ "$" + String.valueOf(y1)+ "$"+String.valueOf(x2)+"$"+String.valueOf(y2);
             writer.println(cordenadas);
         }
-        writer.close();*/
+        writer.close();
     }
 }
