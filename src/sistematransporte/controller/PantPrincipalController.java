@@ -8,9 +8,13 @@ package sistematransporte.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXToggleButton;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -39,6 +43,7 @@ import sistematransporte.model.Arista;
 import sistematransporte.model.CierreCosevi;
 import sistematransporte.model.Dijsktra;
 import sistematransporte.model.Mapa;
+import static sistematransporte.model.Mapa.destinos;
 import sistematransporte.model.Nodo;
 import sistematransporte.model.Vehiculo;
 import sistematransporte.util.Mensaje;
@@ -119,8 +124,14 @@ public class PantPrincipalController extends Controller implements Initializable
     private Floyd f = new Floyd();
 
     public static Boolean rutaNueva = false;
+
     @FXML
     private Label lbCostoestimado;
+
+    public static Timer timer;
+    private LinkedList<Arista> aristasParaGrafoDirigido= new LinkedList<Arista>();
+    @FXML
+    private JFXButton btnGuardarAristas;
 
 
     /**
@@ -166,6 +177,7 @@ public class PantPrincipalController extends Controller implements Initializable
         apCentro.getChildren().add(ivAreaDelimitada);
         cargarNodos();
         cargarAristas();
+        mapa.cargarAristasDirigidas();
 
     }
 
@@ -220,13 +232,32 @@ public class PantPrincipalController extends Controller implements Initializable
                                 lbRecorridoFinal.setText("");
                                 lbRecorridoEstimado.setText("");
                             } else {
+                                /*System.out.println("X: "+x1+"  Y: "+y1);
+                                if(nodoOrigen == null){
+                                    nodoOrigen = nodo;
+                                }
+                                else
+                                {
+                                    Arista arista = new Arista(nodoOrigen.getCenterX(), nodoOrigen.getCenterY(), x1, y1);
+                                    Arista aristaDirida = new Arista(x1, y1,nodoOrigen.getCenterX(), nodoOrigen.getCenterY());
+                                    nodoOrigen = null;
+                                    aristasParaGrafoDirigido.add(aristaDirida);
+                                }*/
+                                
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
+                                    if (rbNoDirigido.isSelected()) {
+                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        nodoOrigen = null;
+                                        enEjecucion = true;
+                                    } else {//aqui es si se esta trabajando con grafo dirigido, recordar cambiar
+                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        nodoOrigen = null;
+                                        enEjecucion = true;
+                                    }
 
-                                    int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
-                                    GenerarRuta(nodoOrigen, nodo, new Vehiculo());
-                                    nodoOrigen = null;
-                                    enEjecucion = true;
+                                    //int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
+                                    
                                 }
                             }
                             x1 = x2;
@@ -239,9 +270,6 @@ public class PantPrincipalController extends Controller implements Initializable
             }
         }
     };
-    public static Timer timer;
-
-    //private int costoDeViaje=0;
     private void calcularTarifa() {
         float valorTiempo = 50;
         float valorRecorrido = 4;
@@ -413,6 +441,7 @@ public class PantPrincipalController extends Controller implements Initializable
                         t.setReparacion(false);
                         t.setStroke(Color.TRANSPARENT);
                         t.setStrokeWidth(3);
+                        t.setPeso(t.getPesoOriginal());
                     });
                     apCentro.getChildren().remove(carro);
                 }
@@ -557,5 +586,22 @@ public class PantPrincipalController extends Controller implements Initializable
             sb.append("\n");
         }
         //System.out.println(sb);
+
+    }
+
+    @FXML
+    private void presionarBtnGuardarAristas(ActionEvent event) throws FileNotFoundException, UnsupportedEncodingException {
+       /* PrintWriter writer = new PrintWriter("src/sistematransporte/util/AristasDirigidas.txt", "UTF-8");        
+        while (!aristasParaGrafoDirigido.isEmpty()) {
+            Arista arista = aristasParaGrafoDirigido.get(0);
+            aristasParaGrafoDirigido.remove(0);
+            Double x1 =arista.getStartX();
+            Double y1 = arista.getStartY();
+            Double x2 =arista.getEndX();
+            Double y2 = arista.getEndY();
+            String cordenadas = String.valueOf(x1)+ "$" + String.valueOf(y1)+ "$"+String.valueOf(x2)+"$"+String.valueOf(y2);
+            writer.println(cordenadas);
+        }
+        writer.close();*/
     }
 }

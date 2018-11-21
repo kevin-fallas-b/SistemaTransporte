@@ -58,7 +58,11 @@
       <Label fx:id="lbTiempo" layoutX="646.0" layoutY="342.0" prefHeight="17.0" prefWidth="36.0" />
       <Label fx:id="lbTiempoMin" layoutX="610.0" layoutY="341.0" prefHeight="17.0" prefWidth="30.0" />
       <Label layoutX="641.0" layoutY="342.0" text=":" />
+
       <Label layoutX="499.0" layoutY="375.0" text="Costo estimado:" />
       <Label fx:id="lbCostoestimado" layoutX="603.0" layoutY="375.0" prefHeight="17.0" prefWidth="79.0" />
+
+      <JFXButton fx:id="btnGuardarAristas" layoutX="556.0" layoutY="430.0" onAction="#presionarBtnGuardarAristas" text="Guardar Aristas" />
+
    </children>
 </AnchorPane>
