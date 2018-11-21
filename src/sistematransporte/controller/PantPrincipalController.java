@@ -252,7 +252,7 @@ public class PantPrincipalController extends Controller implements Initializable
                                         }
                                         else if(rbFloyd.isSelected())
                                         {
-                                            floydWarshal(nodoOrigen, nodo, new Vehiculo());
+                                           floydWarshal(nodoOrigen, nodo, new Vehiculo());
                                         }
                                         nodoOrigen = null;
                                         enEjecucion = true;
@@ -294,7 +294,7 @@ public class PantPrincipalController extends Controller implements Initializable
 
     }
  private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro)
- { System.out.println("entre cebo");
+ { 
      GenerarRuta(ini, fin, carro);
  }
     private void tiempo() {
