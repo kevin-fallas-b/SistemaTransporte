@@ -237,15 +237,11 @@ public class PantPrincipalController extends Controller implements Initializable
                                 if (nodo != nodoOrigen && !enEjecucion) {
                                     animacionTermin = true;
                                     if (rbNoDirigido.isSelected()) {
-
-                                        if(rbDijkstra.isSelected())
-                                        {
-                                        GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        if (rbDijkstra.isSelected()) {
+                                            GenerarRuta(nodoOrigen, nodo, new Vehiculo());
+                                        } else if (rbFloyd.isSelected()) {
+                                            floydWarshal(nodoOrigen, nodo, new Vehiculo());
                                         }
-                                        else if(rbFloyd.isSelected())
-                                        {
-                                           floydWarshal(nodoOrigen, nodo, new Vehiculo());
-
                                         nodoOrigen = null;
                                         enEjecucion = true;
                                     } else {
@@ -281,11 +277,9 @@ public class PantPrincipalController extends Controller implements Initializable
 
     }
 
-
     private void floydWarshal(Nodo ini, Nodo fin, Vehiculo carro) {
         GenerarRuta(ini, fin, carro);
     }
-
 
     private void tiempo() {
         timerEnEjecucion = true;
