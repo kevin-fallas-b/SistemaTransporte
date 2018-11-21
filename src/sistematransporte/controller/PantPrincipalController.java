@@ -252,7 +252,7 @@ public class PantPrincipalController extends Controller implements Initializable
                                         enEjecucion = true;
                                     }
 
-                                    int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
+                                    //int vec[]=f.floyd_cam(matPeso, nodoOrigen.getNumNodo(), nodo.getNumNodo());
                                     
                                 }
                             }
@@ -581,7 +581,7 @@ public class PantPrincipalController extends Controller implements Initializable
             }
           //  sb.append("\n");
         }
-        System.out.println(sb);
+        //System.out.println(sb);
     }
 
     @FXML

@@ -101,13 +101,13 @@ public class Mapa extends ImageView {
             Double posy2 = Double.valueOf(parts[3]);
 
             Arista arista = new Arista(posx, posy, posx2, posy2);
-           
+
             arista.agregarNodos(destinos);
 
             aristas.add(arista);
         }
     }
-    
+
     public void cargarAristasDirigidas() throws FileNotFoundException, IOException {
 
         BufferedReader reader = new BufferedReader(new FileReader("src/sistematransporte/util/AristasDirigidas.txt"));
@@ -122,11 +122,12 @@ public class Mapa extends ImageView {
             Double posy2 = Double.valueOf(parts[3]);
 
             Arista aristaNuevas = new Arista(posx, posy, posx2, posy2);
-            //aristaNuevas.agregarNodos(destinos);
+            aristaNuevas.setOrigen(identificarNodo(posx, posy));
+            aristaNuevas.setDestino(identificarNodo(posx2, posy2));
             aristas.add(aristaNuevas);
         }
-        
-        /*while(!aristas.isEmpty()){
+
+        while(!aristas.isEmpty()){
             Nodo nodo = aristas.get(0).getOrigen();
             if(listaDirigida.contains(nodo)){
                 nodo.getNodosAdyacentes().add(aristas.get(0).getDestino());
@@ -135,7 +136,16 @@ public class Mapa extends ImageView {
                 listaDirigida.add(nodo);                
             }
             aristas.remove(0);
-        }*/
-        
+        }
+    }
+
+    private Nodo identificarNodo(Double x, Double y) {
+        for (int i = 0; i < destinos.size(); i++) {
+            if (destinos.get(i).getCenterX() == x && destinos.get(i).getCenterY() == y) {
+                return destinos.get(i);
+            }
+
+        }
+        return null;
     }
 }
