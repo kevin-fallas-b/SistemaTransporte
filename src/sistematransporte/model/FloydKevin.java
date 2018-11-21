@@ -5,6 +5,8 @@
  */
 package sistematransporte.model;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Kevin F
@@ -70,4 +72,16 @@ public class FloydKevin {
             System.out.println(); 
         } 
     } 
+    public void ListaAMat(LinkedList<Nodo> lista){
+        /*Double p = inicio.distance(fin);
+        this.peso = p.intValue();
+        this.pesoOriginal=this.peso;*/
+        Integer matriz[][]= new Integer[lista.size()][lista.size()];
+        for(int i=0;i<lista.size();i++){
+            Nodo nodo = lista.get(i);
+            for(int k=0;k<nodo.getNodosAdyacentes().size();k++){
+                //matriz.
+            }
+        }
+    }
 }

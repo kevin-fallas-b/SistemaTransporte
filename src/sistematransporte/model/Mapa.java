@@ -144,15 +144,6 @@ public class Mapa extends ImageView {
             }
             aristas.remove(0);
         }
-
-        //imprimir lista de adyacentes dirigida
-        for (int i = 0; i < listaDirigida.size(); i++) {
-            System.out.println("          NODO NUM     " + listaDirigida.get(i).getNumNodo() + " CONTIENE DESTINOS A: ");
-            for (Nodo nodo : listaDirigida.get(i).getNodosAdyacentes()) {
-                System.out.println(nodo.getNumNodo());
-            }
-        }
-        destinos=listaDirigida;
     }
 
     private Nodo identificarNodo(Double x, Double y) {
